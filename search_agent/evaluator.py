@@ -3,6 +3,14 @@
 This module provides functionality to evaluate search modules on both speed and quality metrics.
 It includes functions for measuring execution time, LLM-based quality evaluation, NLP-based
 quality evaluation, and SQLite logging for evaluation results.
+
+Prerequisites:
+    For NLP-based quality evaluation, you need to download a spaCy model with word vectors:
+    
+    python -m spacy download en_core_web_md
+    
+    This downloads the medium English model (~50MB) with word vectors for similarity calculations.
+    Alternative models: en_core_web_sm (small, no vectors), en_core_web_lg (large, more accurate).
 """
 
 import importlib
@@ -12,6 +20,7 @@ from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 
 import typer
+import spacy
 from openai import OpenAI
 from search_agent.core.models import SearchModuleOutput
 from search_agent.config import settings
@@ -151,6 +160,58 @@ Relevance Score (1-10):"""
             
     except Exception as e:
         raise Exception(f"LLM API call failed: {e}")
+
+
+def evaluate_quality_nlp(search_output: SearchModuleOutput) -> float:
+    """
+    Evaluate the quality and relevance of search results using NLP similarity.
+    
+    This function calculates the cosine similarity between the query and the 
+    concatenated result snippets using spaCy's word vectors.
+    
+    Args:
+        search_output: The SearchModuleOutput object containing search results
+        
+    Returns:
+        A float score between 0 and 1 representing semantic similarity
+        
+    Raises:
+        OSError: If the spaCy model is not installed
+        ValueError: If no results are provided or model lacks vectors
+    """
+    if not search_output.results:
+        raise ValueError("No search results provided for evaluation")
+    
+    try:
+        # Load the spaCy model with word vectors
+        nlp = spacy.load("en_core_web_md")
+    except OSError:
+        raise OSError(
+            "spaCy model 'en_core_web_md' not found. "
+            "Please install it with: python -m spacy download en_core_web_md"
+        )
+    
+    # Check if the model has word vectors
+    if not nlp.meta.get("vectors", {}).get("keys", 0):
+        raise ValueError(
+            "The loaded spaCy model does not have word vectors. "
+            "Please use a model with vectors like 'en_core_web_md' or 'en_core_web_lg'"
+        )
+    
+    # Generate Doc object for the query
+    query_doc = nlp(search_output.query)
+    
+    # Concatenate all result snippets
+    results_text = " ".join([result.snippet for result in search_output.results])
+    
+    # Generate Doc object for the concatenated result snippets
+    results_doc = nlp(results_text)
+    
+    # Calculate cosine similarity between query and results
+    # The similarity method returns a float between 0 and 1
+    similarity_score = query_doc.similarity(results_doc)
+    
+    return similarity_score
 
 
 def setup_database() -> None:

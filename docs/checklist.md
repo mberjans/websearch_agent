@@ -94,13 +94,13 @@
 
 #### **Ticket: WSA-303 \- Implement NLP-Based Quality Evaluation**
 
-* \[ \] **WSA-303-01:** Add the spacy library to dependencies.  
-* \[ \] **WSA-303-02:** Document the command to download a spaCy model with word vectors (e.g., python \-m spacy download en\_core\_web\_md).  
-* \[ \] **WSA-303-03:** Implement a function evaluate\_quality\_nlp(search\_output: SearchModuleOutput).  
-* \[ \] **WSA-303-04:** Load the spaCy model.  
-* \[ \] **WSA-303-05:** Generate Doc objects for the query and the concatenated result snippets.  
-* \[ \] **WSA-303-06:** Calculate the cosine similarity between the two Doc objects using the .similarity() method.49  
-* \[ \] **WSA-303-07:** Return the resulting similarity score (a float between 0 and 1).
+* \[x\] **WSA-303-01:** Add the spacy library to dependencies.  
+* \[x\] **WSA-303-02:** Document the command to download a spaCy model with word vectors (e.g., python \-m spacy download en\_core\_web\_md).  
+* \[x\] **WSA-303-03:** Implement a function evaluate\_quality\_nlp(search\_output: SearchModuleOutput).  
+* \[x\] **WSA-303-04:** Load the spaCy model.  
+* \[x\] **WSA-303-05:** Generate Doc objects for the query and the concatenated result snippets.  
+* \[x\] **WSA-303-06:** Calculate the cosine similarity between the two Doc objects using the .similarity() method.49  
+* \[x\] **WSA-303-07:** Return the resulting similarity score (a float between 0 and 1).
 
 #### **Ticket: WSA-304 \- Implement SQLite Logging for Evaluation Results**
 
