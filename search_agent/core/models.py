@@ -25,3 +25,20 @@ class SearchModuleOutput(BaseModel):
     timestamp_utc: datetime = Field(..., description="The UTC timestamp of when the search was completed.")
     execution_time_seconds: float = Field(..., description="The total execution time for the search module in seconds.")
     results: List[SearchResult] = Field(..., description="A list of search result items.")
+
+
+class SynthesizedAnswer(BaseModel):
+    """Represents a synthesized answer to a query."""
+    answer: str = Field(..., description="The synthesized answer to the query.")
+    source_urls: List[HttpUrl] = Field(..., description="List of URLs from which content was extracted for synthesis.")
+    timestamp_utc: datetime = Field(..., description="The UTC timestamp of when the answer was synthesized.")
+    execution_time_seconds: float = Field(..., description="The total execution time for answer synthesis.")
+
+
+class AnswerEvaluationResult(BaseModel):
+    """Represents the evaluation metrics for a synthesized answer."""
+    factual_consistency_score: float = Field(..., description="Score indicating how consistent the answer is with source content (0-1).")
+    relevance_score: float = Field(..., description="Score indicating how relevant the answer is to the original query (0-1).")
+    completeness_score: float = Field(..., description="Score indicating how complete the answer is based on available content (0-1).")
+    conciseness_score: float = Field(..., description="Score indicating the conciseness of the answer (0-1).")
+    llm_feedback: Optional[str] = Field(None, description="Optional textual feedback from the LLM evaluator.")

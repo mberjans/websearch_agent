@@ -20,12 +20,12 @@
 
 #### **Ticket: WSA-704 - Implement Answer Orchestrator**
 
-* [ ] **WSA-704-01:** Create the file `search_agent/answer_orchestrator.py`.
-* [ ] **WSA-704-02:** Implement `async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3) -> Dict[str, Any]`.
-* [ ] **WSA-704-03:** Integrate calls to `search_agent.orchestrator.run_orchestration`, `web_content_extractor`, `answer_synthesizer`, and `answer_evaluator`.
-* [ ] **WSA-704-04:** Implement logic for selecting top N links and aggregating content.
+* [x] **WSA-704-01:** Create the file `search_agent/answer_orchestrator.py`.
+* [x] **WSA-704-02:** Implement `async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3) -> Dict[str, Any]`.
+* [x] **WSA-704-03:** Integrate calls to `search_agent.orchestrator.run_orchestration`, `web_content_extractor`, `answer_synthesizer`, and `answer_evaluator`.
+* [x] **WSA-704-04:** Implement logic for selecting top N links and aggregating content.
 
 #### **Ticket: WSA-705 - Update Core Models**
 
-* [ ] **WSA-705-01:** Modify `search_agent/core/models.py` to add `SynthesizedAnswer` and `AnswerEvaluationResult` Pydantic models.
-* [ ] **WSA-705-02:** Include fields for answer text, source URLs, timestamps, execution time, and evaluation scores.
+* [x] **WSA-705-01:** Modify `search_agent/core/models.py` to add `SynthesizedAnswer` and `AnswerEvaluationResult` Pydantic models.
+* [x] **WSA-705-02:** Include fields for answer text, source URLs, timestamps, execution time, and evaluation scores.
