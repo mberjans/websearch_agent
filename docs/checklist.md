@@ -13,9 +13,9 @@
 
 #### **Ticket: WSA-102 \- Implement Core Interfaces and Configuration Management**
 
-* \[ \] **WSA-102-01:** Create the file search\_agent/core/models.py.  
-* \[ \] **WSA-102-02:** In models.py, define the SearchResult Pydantic model with fields: title (str), url (HttpUrl), and snippet (str).  
-* \[ \] **WSA-102-03:** In models.py, define the SearchModuleOutput Pydantic model with all specified fields (source\_name, query, timestamp\_utc, execution\_time\_seconds, results).  
+* \[x\] **WSA-102-01:** Create the file search\_agent/core/models.py.  
+* \[x\] **WSA-102-02:** In models.py, define the SearchResult Pydantic model with fields: title (str), url (HttpUrl), and snippet (str).  
+* \[x\] **WSA-102-03:** In models.py, define the SearchModuleOutput Pydantic model with all specified fields (source\_name, query, timestamp\_utc, execution\_time\_seconds, results).  
 * \[ \] **WSA-102-04:** Create the file search\_agent/config.py.  
 * \[ \] **WSA-102-05:** Implement a Settings class in config.py using Pydantic's BaseSettings to load configuration from environment variables and a .env file.8  
 * \[ \] **WSA-102-06:** Add initial configuration variables to the Settings class, including placeholders for future API keys and EVALUATION\_DB\_PATH.  
