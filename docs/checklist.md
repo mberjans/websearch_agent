@@ -67,11 +67,11 @@
 #### **Ticket: WSA-202 \- Unit Tests for Playwright Search Module**
 
 * \[x\] **WSA-202-01:** Create the test file tests/test\_playwright\_search.py.  
-* \[ \] **WSA-202-02:** Add pytest-asyncio to development dependencies.  
-* \[ \] **WSA-202-03:** Write test functions as async def and decorate them with @pytest.mark.asyncio.  
-* \[ \] **WSA-202-04:** Use mocking to patch Playwright's page object and its methods (goto, locator, inner\_text, etc.).  
-* \[ \] **WSA-202-05:** Create a mock HTML response and configure the patched methods to return it.  
-* \[ \] **WSA-202-06:** Call the search() function and assert that the parsed data in the final JSON output is correct.
+* \[x\] **WSA-202-02:** Add pytest-asyncio to development dependencies.  
+* \[x\] **WSA-202-03:** Write test functions as async def and decorate them with @pytest.mark.asyncio.  
+* \[x\] **WSA-202-04:** Use mocking to patch Playwright's page object and its methods (goto, locator, inner\_text, etc.).  
+* \[x\] **WSA-202-05:** Create a mock HTML response and configure the patched methods to return it.  
+* \[x\] **WSA-202-06:** Call the search() function and assert that the parsed data in the final JSON output is correct.
 
 ### **Phase 3: The Quantitative Evaluator Module**
 
