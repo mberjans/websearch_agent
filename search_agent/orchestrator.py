@@ -37,7 +37,9 @@ async def run_orchestration(query: str) -> SearchModuleOutput:
     # Import all available search modules
     available_modules = [
         'selenium_search',
-        'playwright_search'
+        'playwright_search',
+        'brave_api_search',
+        'google_cse_search'
     ]
     
     # Create list of awaitable tasks
@@ -241,7 +243,9 @@ def list_modules():
     """
     available_modules = [
         'selenium_search',
-        'playwright_search'
+        'playwright_search',
+        'brave_api_search',
+        'google_cse_search'
     ]
     
     typer.echo("Available search modules:")

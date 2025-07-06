@@ -143,23 +143,23 @@
 
 #### **Ticket: WSA-501 \- Implement Brave Search API Module**
 
-* \[ \] **WSA-501-01:** Create the file search\_agent/modules/brave\_api\_search.py.  
-* \[ \] **WSA-501-02:** Add a suitable HTTP client like httpx or the official brave-search library to dependencies.73  
-* \[ \] **WSA-501-03:** Implement an async def search(query: str) function.  
-* \[ \] **WSA-501-04:** Retrieve the BRAVE\_API\_KEY from the central config.py settings object.  
-* \[ \] **WSA-501-05:** Use an async HTTP client to make a GET request to the Brave Search API endpoint, passing the API key in the headers.  
-* \[ \] **WSA-501-06:** Parse the JSON response and map the relevant fields to the SearchModuleOutput Pydantic model.  
-* \[ \] **WSA-501-07:** Implement the standard dual-mode Typer CLI wrapper.
+* \[x\] **WSA-501-01:** Create the file search\_agent/modules/brave\_api\_search.py.  
+* \[x\] **WSA-501-02:** Add a suitable HTTP client like httpx or the official brave-search library to dependencies.73  
+* \[x\] **WSA-501-03:** Implement an async def search(query: str) function.  
+* \[x\] **WSA-501-04:** Retrieve the BRAVE\_API\_KEY from the central config.py settings object.  
+* \[x\] **WSA-501-05:** Use an async HTTP client to make a GET request to the Brave Search API endpoint, passing the API key in the headers.  
+* \[x\] **WSA-501-06:** Parse the JSON response and map the relevant fields to the SearchModuleOutput Pydantic model.  
+* \[x\] **WSA-501-07:** Implement the standard dual-mode Typer CLI wrapper.
 
 #### **Ticket: WSA-502 \- Implement Google Custom Search API Module**
 
-* \[ \] **WSA-502-01:** Create the file search\_agent/modules/google\_cse\_search.py.  
-* \[ \] **WSA-502-02:** Add the google-api-python-client library to dependencies.78  
-* \[ \] **WSA-502-03:** Implement an async def search(query: str) function. If the client library is synchronous, wrap the execution logic with asyncio.to\_thread().  
-* \[ \] **WSA-502-04:** Retrieve GOOGLE\_API\_KEY and GOOGLE\_CSE\_ID from the central config.py settings.  
-* \[ \] **WSA-502-05:** Use the Google API client library to build and execute the search request.  
-* \[ \] **WSA-502-06:** Parse the JSON response and map the fields to the SearchModuleOutput model.  
-* \[ \] **WSA-502-07:** Implement the standard dual-mode Typer CLI wrapper.
+* \[x\] **WSA-502-01:** Create the file search\_agent/modules/google\_cse\_search.py.  
+* \[x\] **WSA-502-02:** Add the google-api-python-client library to dependencies.78  
+* \[x\] **WSA-502-03:** Implement an async def search(query: str) function. If the client library is synchronous, wrap the execution logic with asyncio.to\_thread().  
+* \[x\] **WSA-502-04:** Retrieve GOOGLE\_API\_KEY and GOOGLE\_CSE\_ID from the central config.py settings.  
+* \[x\] **WSA-502-05:** Use the Google API client library to build and execute the search request.  
+* \[x\] **WSA-502-06:** Parse the JSON response and map the fields to the SearchModuleOutput model.  
+* \[x\] **WSA-502-07:** Implement the standard dual-mode Typer CLI wrapper.
 
 ### **Phase 6: Expansion with Specialized Python Libraries**
 
