@@ -77,11 +77,11 @@
 
 #### **Ticket: WSA-301 \- Implement Speed Evaluation Logic**
 
-* \[ \] **WSA-301-01:** Create the file search\_agent/evaluator.py.  
-* \[ \] **WSA-301-02:** Implement a function measure\_speed(module\_name: str, query: str).  
-* \[ \] **WSA-301-03:** Use importlib.import\_module() to dynamically load the specified search module.  
-* \[ \] **WSA-301-04:** Use time.perf\_counter() to record the start and end times around the module's search() call for high-precision benchmarking.35  
-* \[ \] **WSA-301-05:** Calculate and return the total execution time in seconds.
+* \[x\] **WSA-301-01:** Create the file search\_agent/evaluator.py.  
+* \[x\] **WSA-301-02:** Implement a function measure\_speed(module\_name: str, query: str).  
+* \[x\] **WSA-301-03:** Use importlib.import\_module() to dynamically load the specified search module.  
+* \[x\] **WSA-301-04:** Use time.perf\_counter() to record the start and end times around the module's search() call for high-precision benchmarking.35  
+* \[x\] **WSA-301-05:** Calculate and return the total execution time in seconds.
 
 #### **Ticket: WSA-302 \- Implement LLM-Based Quality Evaluation**
 
