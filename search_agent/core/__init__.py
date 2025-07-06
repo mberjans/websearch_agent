@@ -1,0 +1,1 @@
+"""Core package - Contains shared models, exceptions, and utilities."""
