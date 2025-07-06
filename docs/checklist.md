@@ -6,8 +6,8 @@
 * \[x\] **WSA-101-02:** Create the main source package directory (search\_agent/) and the tests directory (tests/).  
 * \[x\] **WSA-101-03:** Inside search\_agent/, create sub-package directories: modules/, core/, and utils/.  
 * \[x\] **WSA-101-04:** Add \_\_init\_\_.py files to search\_agent/ and all its sub-packages to define them as Python packages.1  
-* \[ \] **WSA-101-05:** Initialize the project with poetry init to generate the pyproject.toml file. Poetry is mandated for its robust dependency resolution and reproducible builds via poetry.lock.2  
-* \[ \] **WSA-101-06:** Populate pyproject.toml with initial project metadata (name, version, description).  
+* \[x\] **WSA-101-05:** Initialize the project with poetry init to generate the pyproject.toml file. Poetry is mandated for its robust dependency resolution and reproducible builds via poetry.lock.2  
+* \[x\] **WSA-101-06:** Populate pyproject.toml with initial project metadata (name, version, description).  
 * \[ \] **WSA-101-07:** Create a .gitignore file in the root directory.  
 * \[ \] **WSA-101-08:** Add entries to .gitignore to exclude virtual environment directories (.venv/), Python cache (\_\_pycache\_\_/), environment files (.env), and database files (\*.db).
 
