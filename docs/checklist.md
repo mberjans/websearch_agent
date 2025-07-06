@@ -55,14 +55,14 @@
 
 #### **Ticket: WSA-201 \- Implement Playwright Search Module**
 
-* \[ \] **WSA-201-01:** Add playwright to project dependencies using poetry add playwright.  
-* \[ \] **WSA-201-02:** Run playwright install to download the required browser binaries.  
-* \[ \] **WSA-201-03:** Create the file search\_agent/modules/playwright\_search.py.  
-* \[ \] **WSA-201-04:** Implement the core search function with an async def search(query: str) signature, leveraging Playwright's native async capabilities.29  
-* \[ \] **WSA-201-05:** Implement the Typer CLI wrapper, using asyncio.run() to call the async search function.  
-* \[ \] **WSA-201-06:** Use Playwright's async context manager (async with async\_playwright() as p:) to manage browser instances.  
-* \[ \] **WSA-201-07:** Implement navigation, query input, and data extraction using await page.goto(), await page.locator(), etc.  
-* \[ \] **WSA-201-08:** Ensure the function returns a validated SearchModuleOutput object, adhering to the standard interface.
+* \[x\] **WSA-201-01:** Add playwright to project dependencies using poetry add playwright.  
+* \[x\] **WSA-201-02:** Run playwright install to download the required browser binaries.  
+* \[x\] **WSA-201-03:** Create the file search\_agent/modules/playwright\_search.py.  
+* \[x\] **WSA-201-04:** Implement the core search function with an async def search(query: str) signature, leveraging Playwright's native async capabilities.29  
+* \[x\] **WSA-201-05:** Implement the Typer CLI wrapper, using asyncio.run() to call the async search function.  
+* \[x\] **WSA-201-06:** Use Playwright's async context manager (async with async\_playwright() as p:) to manage browser instances.  
+* \[x\] **WSA-201-07:** Implement navigation, query input, and data extraction using await page.goto(), await page.locator(), etc.  
+* \[x\] **WSA-201-08:** Ensure the function returns a validated SearchModuleOutput object, adhering to the standard interface.
 
 #### **Ticket: WSA-202 \- Unit Tests for Playwright Search Module**
 
