@@ -8,9 +8,9 @@
 
 #### **Ticket: WSA-702 - Implement Answer Synthesizer**
 
-* [ ] **WSA-702-01:** Create the file `search_agent/answer_synthesizer.py`.
-* [ ] **WSA-702-02:** Implement `async def synthesize_answer(query: str, content_snippets: List[str]) -> str` using an LLM (e.g., OpenAI).
-* [ ] **WSA-702-03:** Design a detailed LLM prompt for accurate and concise answer generation.
+* [x] **WSA-702-01:** Create the file `search_agent/answer_synthesizer.py`.
+* [x] **WSA-702-02:** Implement `async def synthesize_answer(query: str, content_snippets: List[str]) -> str` using an LLM (e.g., OpenAI).
+* [x] **WSA-702-03:** Design a detailed LLM prompt for accurate and concise answer generation.
 
 #### **Ticket: WSA-703 - Implement Answer Evaluator**
 
