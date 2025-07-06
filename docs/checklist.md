@@ -14,9 +14,9 @@
 
 #### **Ticket: WSA-703 - Implement Answer Evaluator**
 
-* [ ] **WSA-703-01:** Create the file `search_agent/answer_evaluator.py`.
-* [ ] **WSA-703-02:** Implement `async def evaluate_answer_quality(query: str, synthesized_answer: str, original_content: List[str]) -> Dict[str, Any]` using an LLM and/or NLP techniques.
-* [ ] **WSA-703-03:** Define metrics for factual consistency, relevance, completeness, and conciseness.
+* [x] **WSA-703-01:** Create the file `search_agent/answer_evaluator.py`.
+* [x] **WSA-703-02:** Implement `async def evaluate_answer_quality(query: str, synthesized_answer: str, original_content: List[str]) -> Dict[str, Any]` using an LLM and/or NLP techniques.
+* [x] **WSA-703-03:** Define metrics for factual consistency, relevance, completeness, and conciseness.
 
 #### **Ticket: WSA-704 - Implement Answer Orchestrator**
 
