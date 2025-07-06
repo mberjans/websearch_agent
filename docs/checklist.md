@@ -165,21 +165,21 @@
 
 #### **Ticket: WSA-601 \- Implement httpx \+ BeautifulSoup Search Module**
 
-* \[ \] **WSA-601-01:** Create the file search\_agent/modules/httpx\_search.py.  
-* \[ \] **WSA-601-02:** Add httpx and beautifulsoup4 to project dependencies. httpx is chosen for its high performance and native async support, making it superior to requests for this use case.80  
-* \[ \] **WSA-601-03:** Implement an async def search(query: str) function.  
-* \[ \] **WSA-601-04:** Use an httpx.AsyncClient to perform an async GET request to a target search engine with simple HTML.  
-* \[ \] **WSA-601-05:** Use BeautifulSoup to parse the HTML content from the response.  
-* \[ \] **WSA-601-06:** Implement CSS selectors to extract title, URL, and snippet from the parsed HTML.  
-* \[ \] **WSA-601-07:** Map the extracted data to the standard SearchModuleOutput model.  
-* \[ \] **WSA-601-08:** Implement the standard dual-mode Typer CLI wrapper.
+* \[x\] **WSA-601-01:** Create the file search\_agent/modules/httpx\_search.py.  
+* \[x\] **WSA-601-02:** Add httpx and beautifulsoup4 to project dependencies. httpx is chosen for its high performance and native async support, making it superior to requests for this use case.80  
+* \[x\] **WSA-601-03:** Implement an async def search(query: str) function.  
+* \[x\] **WSA-601-04:** Use an httpx.AsyncClient to perform an async GET request to a target search engine with simple HTML.  
+* \[x\] **WSA-601-05:** Use BeautifulSoup to parse the HTML content from the response.  
+* \[x\] **WSA-601-06:** Implement CSS selectors to extract title, URL, and snippet from the parsed HTML.  
+* \[x\] **WSA-601-07:** Map the extracted data to the standard SearchModuleOutput model.  
+* \[x\] **WSA-601-08:** Implement the standard dual-mode Typer CLI wrapper.
 
 #### **Ticket: WSA-602 \- Implement Scrapy Search Module**
 
-* \[ \] **WSA-602-01:** Create the file search\_agent/modules/scrapy\_search.py.  
-* \[ \] **WSA-602-02:** Add scrapy to project dependencies.  
-* \[ \] **WSA-602-03:** Define a Scrapy Spider class within the module, configured to accept a query.  
-* \[ \] **WSA-602-04:** Implement the spider's parse method to extract result data and yield each result as a dictionary.  
-* \[ \] **WSA-602-05:** Implement the main search(query: str) function to programmatically configure and run the Scrapy spider using CrawlerProcess.  
-* \[ \] **WSA-602-06:** Capture the items yielded by the spider and format the collected data into the standard SearchModuleOutput model.  
-* \[ \] **WSA-602-07:** Implement the standard dual-mode Typer CLI wrapper. This integration is more complex as Scrapy is a full framework, not just a library.84
+* \[x\] **WSA-602-01:** Create the file search\_agent/modules/scrapy\_search.py.  
+* \[x\] **WSA-602-02:** Add scrapy to project dependencies.  
+* \[x\] **WSA-602-03:** Define a Scrapy Spider class within the module, configured to accept a query.  
+* \[x\] **WSA-602-04:** Implement the spider's parse method to extract result data and yield each result as a dictionary.  
+* \[x\] **WSA-602-05:** Implement the main search(query: str) function to programmatically configure and run the Scrapy spider using CrawlerProcess.  
+* \[x\] **WSA-602-06:** Capture the items yielded by the spider and format the collected data into the standard SearchModuleOutput model.  
+* \[x\] **WSA-602-07:** Implement the standard dual-mode Typer CLI wrapper. This integration is more complex as Scrapy is a full framework, not just a library.84
