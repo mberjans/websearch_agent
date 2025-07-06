@@ -104,12 +104,12 @@
 
 #### **Ticket: WSA-304 \- Implement SQLite Logging for Evaluation Results**
 
-* \[ \] **WSA-304-01:** In evaluator.py, implement a setup\_database() function.  
-* \[ \] **WSA-304-02:** Use Python's built-in sqlite3 module to connect to the database file path specified in config.py.54  
-* \[ \] **WSA-304-03:** The setup\_database() function should execute a CREATE TABLE IF NOT EXISTS statement matching the schema in the development plan.  
-* \[ \] **WSA-304-04:** Implement a log\_evaluation() function that takes all evaluation metrics as parameters.  
-* \[ \] **WSA-304-05:** Use an INSERT statement with ? placeholders to safely insert a new record into the evaluation log table.  
-* \[ \] **WSA-304-06:** Ensure the database connection is properly committed and closed after the insert operation.
+* \[x\] **WSA-304-01:** In evaluator.py, implement a setup\_database() function.  
+* \[x\] **WSA-304-02:** Use Python's built-in sqlite3 module to connect to the database file path specified in config.py.54  
+* \[x\] **WSA-304-03:** The setup\_database() function should execute a CREATE TABLE IF NOT EXISTS statement matching the schema in the development plan.  
+* \[x\] **WSA-304-04:** Implement a log\_evaluation() function that takes all evaluation metrics as parameters.  
+* \[x\] **WSA-304-05:** Use an INSERT statement with ? placeholders to safely insert a new record into the evaluation log table.  
+* \[x\] **WSA-304-06:** Ensure the database connection is properly committed and closed after the insert operation.
 
 ### **Phase 4: The Central Orchestrator**
 
