@@ -3,7 +3,7 @@
 #### **Ticket: WSA-101 - Setup Project Structure, Dependency, and Environment Management**
 
 * [x] **WSA-101-01:** Create the root project directory (web_search_agent/).  
-* [ ] **WSA-101-02:** Create the main source package directory (search_agent/) and the tests directory (tests/).  
+* [x] **WSA-101-02:** Create the main source package directory (search_agent/) and the tests directory (tests/).  
 * [ ] **WSA-101-03:** Inside search_agent/, create sub-package directories: modules/, core/, and utils/.  
 * [ ] **WSA-101-04:** Add __init__.py files to search_agent/ and all its sub-packages to define them as Python packages.1  
 * [ ] **WSA-101-05:** Initialize the project with poetry init to generate the pyproject.toml file. Poetry is mandated for its robust dependency resolution and reproducible builds via poetry.lock.2  
