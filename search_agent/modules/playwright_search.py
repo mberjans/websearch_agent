@@ -30,177 +30,48 @@ async def search(query: str) -> SearchModuleOutput:
     async with async_playwright() as p:
         browser = None
         try:
-            # Launch browser in headless mode with anti-detection measures
-            browser = await p.chromium.launch(
-                headless=True,
-                args=[
-                    "--no-sandbox",
-                    "--disable-dev-shm-usage",
-                    "--disable-gpu",
-                    "--disable-web-security",
-                    "--disable-features=VizDisplayCompositor",
-                    "--disable-blink-features=AutomationControlled",
-                    "--no-first-run",
-                    "--disable-background-timer-throttling",
-                    "--disable-backgrounding-occluded-windows",
-                    "--disable-renderer-backgrounding"
-                ]
-            )
+            browser = await p.chromium.launch(headless=True)
+            page = await browser.new_page()
             
-            # Create a new page with user agent and additional settings
-            page = await browser.new_page(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-            )
+            await page.goto(f"https://duckduckgo.com/?q={query}&t=h_&ia=web")
             
-            # Remove webdriver property to avoid detection
-            await page.add_init_script("""
-                Object.defineProperty(navigator, 'webdriver', {
-                    get: () => undefined,
-                });
-            """)
+            await page.wait_for_selector("[data-testid='result']", timeout=10000)
             
-            # Navigate to DuckDuckGo with the query
-            search_url = f"https://duckduckgo.com/?q={query}&t=h_&ia=web"
-            await page.goto(search_url, wait_until="networkidle")
-            
-            # Wait for search results to load
-            await page.wait_for_timeout(5000)  # Give page time to load
-            
-            # Try multiple selectors to find search results
-            result_elements = []
-            selectors_to_try = [
-                "[data-testid='result']",
-                ".result",
-                "article",
-                "[data-testid='web-results'] > div",
-                ".web-result",
-                ".organic-result"
-            ]
-            
-            for selector in selectors_to_try:
-                try:
-                    # Wait for the selector to appear
-                    await page.wait_for_selector(selector, timeout=5000)
-                    result_elements = await page.locator(selector).all()
-                    if result_elements:
-                        break
-                except PlaywrightTimeoutError:
-                    continue
-                except Exception:
-                    continue
-            
-            # Extract data from each result
-            scraped_results = []
+            result_elements = await (await page.locator("[data-testid='result']")).all()
             
             if not result_elements:
-                # Let's check if we can find any content at all
-                page_content = await page.content()
-                if "error" in page_content.lower() or len(page_content) < 10000:
-                    # Likely blocked by anti-bot measures, return a mock result
-                    scraped_results = [
-                        SearchResult(
-                            title=f"Search results for: {query}",
-                            url="https://duckduckgo.com",
-                            snippet="Note: This is a placeholder result as the website detected automated access. In a production environment, additional anti-detection measures would be implemented."
-                        )
-                    ]
-                else:
-                    raise NoResultsError(f"No search results found for query: {query}")
-            else:
-                # Process found result elements
-                for result_element in result_elements:
-                    try:
-                        # Try multiple selectors for title and URL
-                        title = ""
-                        url = ""
-                        snippet = ""
-                        
-                        # Try different title selectors
-                        title_selectors = [
-                            "[data-testid='result-title-a']",
-                            "h2 a",
-                            "h3 a", 
-                            ".result__title a",
-                            ".result-title a",
-                            "a[data-testid='result-title-a']",
-                            "[data-testid='result-title'] a"
-                        ]
-                        
-                        for title_selector in title_selectors:
-                            try:
-                                title_element = result_element.locator(title_selector).first
-                                title = await title_element.inner_text()
-                                url = await title_element.get_attribute("href")
-                                if title and url:
-                                    title = title.strip()
-                                    break
-                            except:
-                                continue
-                        
-                        # Try different snippet selectors
-                        snippet_selectors = [
-                            "[data-testid='result-snippet']",
-                            ".result__snippet",
-                            ".result-snippet",
-                            "[data-testid='result-extras']",
-                            ".result__body",
-                            "[data-testid='result-body']",
-                            ".result__description",
-                            ".result-description",
-                            "[data-testid='result-description']",
-                            ".snippet",
-                            ".abstract",
-                            ".text"
-                        ]
-                        
-                        for snippet_selector in snippet_selectors:
-                            try:
-                                snippet_element = result_element.locator(snippet_selector).first
-                                snippet = await snippet_element.inner_text()
-                                if snippet:
-                                    snippet = snippet.strip()
-                                    break
-                            except:
-                                continue
-                        
-                        # Use fallback if no snippet found
-                        if not snippet:
-                            snippet = "No snippet available"
-                        
-                        # Only add result if we have a title and URL
-                        if title and url:
-                            scraped_results.append(SearchResult(
-                                title=title,
-                                url=url,
-                                snippet=snippet
-                            ))
-                            
-                    except Exception as e:
-                        # Skip individual result if parsing fails
-                        continue
-            
+                raise NoResultsError(f"No search results found for query: {query}")
+
+            scraped_results = []
+            for result_element in result_elements:
+                title_element = (await result_element.locator("[data-testid='result-title-a']")).first
+                snippet_element = (await result_element.locator("[data-testid='result-snippet']")).first
+                
+                title = str(await title_element.inner_text())
+                url = str(await title_element.get_attribute('href'))
+                snippet = str(await snippet_element.inner_text())
+                
+                if title and url:
+                    scraped_results.append(SearchResult(title=title, url=url, snippet=snippet))
+
             if not scraped_results:
                 raise NoResultsError(f"No valid search results could be parsed for query: {query}")
-                
+
+            return SearchModuleOutput(
+                source_name="playwright_search",
+                query=query,
+                timestamp_utc=datetime.now(timezone.utc),
+                execution_time_seconds=time.perf_counter() - start_time,
+                results=scraped_results
+            )
+
         except PlaywrightTimeoutError as e:
             raise ScrapingError(f"Playwright timeout error: {e}")
         except Exception as e:
             raise ScrapingError(f"Unexpected error during search: {e}")
         finally:
-            # Ensure browser is always closed
             if browser:
                 await browser.close()
-    
-    end_time = time.perf_counter()
-    execution_time = end_time - start_time
-    
-    return SearchModuleOutput(
-        source_name="playwright_search",
-        query=query,
-        timestamp_utc=datetime.now(timezone.utc),
-        execution_time_seconds=execution_time,
-        results=scraped_results
-    )
 
 
 @app.command()
@@ -218,7 +89,6 @@ def main(
     """
     try:
         result_obj = asyncio.run(search(query))
-        # Pydantic's model_dump_json method ensures standardized, validated JSON output.
         print(result_obj.model_dump_json(indent=2))
     except Exception as e:
         typer.echo(f"Error: {e}", err=True)
@@ -226,5 +96,4 @@ def main(
 
 
 if __name__ == "__main__":
-    # This block makes the script executable from the command line.
     app()
