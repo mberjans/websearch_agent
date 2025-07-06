@@ -115,29 +115,29 @@
 
 #### **Ticket: WSA-401 \- Implement Concurrent Module Execution**
 
-* \[ \] **WSA-401-01:** Create the file search\_agent/orchestrator.py.  
-* \[ \] **WSA-401-02:** Implement the main async def run\_orchestration(query: str) function.  
-* \[ \] **WSA-401-03:** Import all available search modules.  
-* \[ \] **WSA-401-04:** Create a list of awaitable tasks. For synchronous modules like Selenium, wrap the function call with asyncio.to\_thread() to prevent blocking the event loop.  
-* \[ \] **WSA-401-05:** Execute all tasks concurrently using await asyncio.gather(\*tasks, return\_exceptions=True). Using asyncio is the correct approach for I/O-bound tasks like network requests.36  
-* \[ \] **WSA-401-06:** Process the results from gather, separating successfully completed tasks from those that raised exceptions.  
-* \[ \] **WSA-401-07:** Implement logging for any exceptions captured during module execution.
+* \[x\] **WSA-401-01:** Create the file search\_agent/orchestrator.py.  
+* \[x\] **WSA-401-02:** Implement the main async def run\_orchestration(query: str) function.  
+* \[x\] **WSA-401-03:** Import all available search modules.  
+* \[x\] **WSA-401-04:** Create a list of awaitable tasks. For synchronous modules like Selenium, wrap the function call with asyncio.to\_thread() to prevent blocking the event loop.  
+* \[x\] **WSA-401-05:** Execute all tasks concurrently using await asyncio.gather(\*tasks, return\_exceptions=True). Using asyncio is the correct approach for I/O-bound tasks like network requests.36  
+* \[x\] **WSA-401-06:** Process the results from gather, separating successfully completed tasks from those that raised exceptions.  
+* \[x\] **WSA-401-07:** Implement logging for any exceptions captured during module execution.
 
 #### **Ticket: WSA-402 \- Implement Result Merging and De-duplication**
 
-* \[ \] **WSA-402-01:** Implement a function merge\_and\_deduplicate(module\_outputs: list).  
-* \[ \] **WSA-402-02:** Initialize an empty dictionary, unique\_results \= {}, to store unique results.  
-* \[ \] **WSA-402-03:** Iterate through the results from all successful module runs.  
-* \[ \] **WSA-402-04:** For each search result, normalize its URL (e.g., convert to lowercase, remove trailing slashes) to use as a key.  
-* \[ \] **WSA-402-05:** If the normalized URL is not already a key in unique\_results, add the result object to the dictionary. This method efficiently removes duplicates while preserving the first-seen instance.65  
-* \[ \] **WSA-402-06:** Return list(unique\_results.values()) to provide the final de-duplicated list.
+* \[x\] **WSA-402-01:** Implement a function merge\_and\_deduplicate(module\_outputs: list).  
+* \[x\] **WSA-402-02:** Initialize an empty dictionary, unique\_results \= {}, to store unique results.  
+* \[x\] **WSA-402-03:** Iterate through the results from all successful module runs.  
+* \[x\] **WSA-402-04:** For each search result, normalize its URL (e.g., convert to lowercase, remove trailing slashes) to use as a key.  
+* \[x\] **WSA-402-05:** If the normalized URL is not already a key in unique\_results, add the result object to the dictionary. This method efficiently removes duplicates while preserving the first-seen instance.65  
+* \[x\] **WSA-402-06:** Return list(unique\_results.values()) to provide the final de-duplicated list.
 
 #### **Ticket: WSA-403 \- Implement Initial Re-ranking Strategy**
 
-* \[ \] **WSA-403-01:** Implement a function rerank\_results(results: list).  
-* \[ \] **WSA-403-02:** Define a source priority mapping (e.g., a dictionary where API sources have a higher priority value than scraped sources).  
-* \[ \] **WSA-403-03:** Use Python's sorted() function with a key lambda that looks up the result's source priority in the mapping.  
-* \[ \] **WSA-403-04:** Ensure the function is designed to be pluggable, allowing for future replacement with more advanced algorithms like Cross-Encoders or MMR.67
+* \[x\] **WSA-403-01:** Implement a function rerank\_results(results: list).  
+* \[x\] **WSA-403-02:** Define a source priority mapping (e.g., a dictionary where API sources have a higher priority value than scraped sources).  
+* \[x\] **WSA-403-03:** Use Python's sorted() function with a key lambda that looks up the result's source priority in the mapping.  
+* \[x\] **WSA-403-04:** Ensure the function is designed to be pluggable, allowing for future replacement with more advanced algorithms like Cross-Encoders or MMR.67
 
 ### **Phase 5: Integration of API-Based Search Modules**
 
