@@ -66,7 +66,7 @@
 
 #### **Ticket: WSA-202 \- Unit Tests for Playwright Search Module**
 
-* \[ \] **WSA-202-01:** Create the test file tests/test\_playwright\_search.py.  
+* \[x\] **WSA-202-01:** Create the test file tests/test\_playwright\_search.py.  
 * \[ \] **WSA-202-02:** Add pytest-asyncio to development dependencies.  
 * \[ \] **WSA-202-03:** Write test functions as async def and decorate them with @pytest.mark.asyncio.  
 * \[ \] **WSA-202-04:** Use mocking to patch Playwright's page object and its methods (goto, locator, inner\_text, etc.).  
