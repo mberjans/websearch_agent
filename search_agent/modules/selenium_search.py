@@ -52,14 +52,33 @@ def search(query: str) -> SearchModuleOutput:
         search_url = f"https://duckduckgo.com/?q={query}&t=h_&ia=web"
         driver.get(search_url)
         
-        # Wait for the search results container to load
-        wait = WebDriverWait(driver, 10)
-        results_container = wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-testid='result']"))
-        )
+        # Wait a bit for the page to fully load
+        time.sleep(2)
         
-        # Find all result elements
-        result_elements = driver.find_elements(By.CSS_SELECTOR, "[data-testid='result']")
+        # Wait for the page to load
+        wait = WebDriverWait(driver, 10)
+        
+        # Try multiple selectors that might contain search results
+        result_elements = []
+        selectors_to_try = [
+            "[data-testid='result']",
+            ".result",
+            ".results .result",
+            "[data-layout='organic']",
+            ".web-result",
+            ".results_links",
+            ".result__body",
+            "[data-area='mainline'] [data-layout='organic']"
+        ]
+        
+        for selector in selectors_to_try:
+            try:
+                wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+                result_elements = driver.find_elements(By.CSS_SELECTOR, selector)
+                if result_elements:
+                    break
+            except:
+                continue
         
         if not result_elements:
             raise NoResultsError(f"No search results found for query: {query}")
@@ -68,17 +87,60 @@ def search(query: str) -> SearchModuleOutput:
         scraped_results = []
         for result_element in result_elements:
             try:
-                # Extract title
-                title_element = result_element.find_element(By.CSS_SELECTOR, "[data-testid='result-title-a']")
-                title = title_element.text.strip() if title_element else "No title"
+                # Try multiple selectors for title and URL
+                title = ""
+                url = ""
+                snippet = ""
                 
-                # Extract URL
-                url_element = result_element.find_element(By.CSS_SELECTOR, "[data-testid='result-title-a']")
-                url = url_element.get_attribute("href") if url_element else ""
+                # Try different title selectors
+                title_selectors = [
+                    "[data-testid='result-title-a']",
+                    "h2 a",
+                    "h3 a", 
+                    ".result__title a",
+                    ".result-title a",
+                    "a[data-testid='result-title-a']",
+                    "[data-testid='result-title'] a"
+                ]
                 
-                # Extract snippet
-                snippet_element = result_element.find_element(By.CSS_SELECTOR, "[data-testid='result-snippet']")
-                snippet = snippet_element.text.strip() if snippet_element else "No snippet available"
+                for title_selector in title_selectors:
+                    try:
+                        title_element = result_element.find_element(By.CSS_SELECTOR, title_selector)
+                        title = title_element.text.strip()
+                        url = title_element.get_attribute("href")
+                        if title and url:
+                            break
+                    except:
+                        continue
+                
+                # Try different snippet selectors
+                snippet_selectors = [
+                    "[data-testid='result-snippet']",
+                    ".result__snippet",
+                    ".result-snippet", 
+                    "[data-testid='result-extras']",
+                    ".result__body",
+                    "[data-testid='result-body']",
+                    ".result__description",
+                    ".result-description",
+                    "[data-testid='result-description']",
+                    ".snippet",
+                    ".abstract",
+                    ".text"
+                ]
+                
+                for snippet_selector in snippet_selectors:
+                    try:
+                        snippet_element = result_element.find_element(By.CSS_SELECTOR, snippet_selector)
+                        snippet = snippet_element.text.strip()
+                        if snippet:
+                            break
+                    except:
+                        continue
+                
+                # Use fallback if no snippet found
+                if not snippet:
+                    snippet = "No snippet available"
                 
                 # Only add result if we have a title and URL
                 if title and url:
