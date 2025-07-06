@@ -25,20 +25,20 @@
 
 #### **Ticket: WSA-103 \- Implement Selenium Search Module (MVP)**
 
-* \[ \] **WSA-103-01:** Create the file search\_agent/modules/selenium\_search.py.  
-* \[ \] **WSA-103-02:** Add selenium, typer, and webdriver-manager as project dependencies using poetry add.  
-* \[ \] **WSA-103-03:** Implement the core search(query: str) function signature.  
-* \[ \] **WSA-103-04:** Implement the Typer CLI wrapper function main(query: str) that calls search() and prints the resulting Pydantic model as JSON.13  
-* \[ \] **WSA-103-05:** Add the if \_\_name\_\_ \== "\_\_main\_\_": block to execute the Typer application.  
-* \[ \] **WSA-103-06:** Configure Selenium's ChromeOptions to run in headless mode using the \--headless=new argument.17  
-* \[ \] **WSA-103-07:** Initialize the WebDriver using webdriver-manager to automate driver management.  
-* \[ \] **WSA-103-08:** Implement browser automation to navigate to DuckDuckGo with the specified query.23  
-* \[ \] **WSA-103-09:** Use WebDriverWait and expected\_conditions to reliably wait for the search results container to load.  
-* \[ \] **WSA-103-10:** Implement robust CSS selectors to find and loop through each result element.  
-* \[ \] **WSA-103-11:** Within the loop, extract the title, url, and snippet for each result.  
-* \[ \] **WSA-103-12:** Populate the SearchResult and SearchModuleOutput Pydantic models with the scraped data and metadata.  
-* \[ \] **WSA-103-13:** Wrap all WebDriver operations in a try...finally block to ensure driver.quit() is always called, preventing resource leaks.  
-* \[ \] **WSA-103-14:** Catch Selenium-specific exceptions (e.g., TimeoutException) and re-raise them as custom application exceptions (e.g., ScrapingError).
+* \[x\] **WSA-103-01:** Create the file search\_agent/modules/selenium\_search.py.  
+* \[x\] **WSA-103-02:** Add selenium, typer, and webdriver-manager as project dependencies using poetry add.  
+* \[x\] **WSA-103-03:** Implement the core search(query: str) function signature.  
+* \[x\] **WSA-103-04:** Implement the Typer CLI wrapper function main(query: str) that calls search() and prints the resulting Pydantic model as JSON.13  
+* \[x\] **WSA-103-05:** Add the if \_\_name\_\_ \== "\_\_main\_\_": block to execute the Typer application.  
+* \[x\] **WSA-103-06:** Configure Selenium's ChromeOptions to run in headless mode using the \--headless=new argument.17  
+* \[x\] **WSA-103-07:** Initialize the WebDriver using webdriver-manager to automate driver management.  
+* \[x\] **WSA-103-08:** Implement browser automation to navigate to DuckDuckGo with the specified query.23  
+* \[x\] **WSA-103-09:** Use WebDriverWait and expected\_conditions to reliably wait for the search results container to load.  
+* \[x\] **WSA-103-10:** Implement robust CSS selectors to find and loop through each result element.  
+* \[x\] **WSA-103-11:** Within the loop, extract the title, url, and snippet for each result.  
+* \[x\] **WSA-103-12:** Populate the SearchResult and SearchModuleOutput Pydantic models with the scraped data and metadata.  
+* \[x\] **WSA-103-13:** Wrap all WebDriver operations in a try...finally block to ensure driver.quit() is always called, preventing resource leaks.  
+* \[x\] **WSA-103-14:** Catch Selenium-specific exceptions (e.g., TimeoutException) and re-raise them as custom application exceptions (e.g., ScrapingError).
 
 #### **Ticket: WSA-104 \- Unit Tests for Selenium Search Module**
 
