@@ -16,12 +16,12 @@
 * \[x\] **WSA-102-01:** Create the file search\_agent/core/models.py.  
 * \[x\] **WSA-102-02:** In models.py, define the SearchResult Pydantic model with fields: title (str), url (HttpUrl), and snippet (str).  
 * \[x\] **WSA-102-03:** In models.py, define the SearchModuleOutput Pydantic model with all specified fields (source\_name, query, timestamp\_utc, execution\_time\_seconds, results).  
-* \[ \] **WSA-102-04:** Create the file search\_agent/config.py.  
-* \[ \] **WSA-102-05:** Implement a Settings class in config.py using Pydantic's BaseSettings to load configuration from environment variables and a .env file.8  
-* \[ \] **WSA-102-06:** Add initial configuration variables to the Settings class, including placeholders for future API keys and EVALUATION\_DB\_PATH.  
-* \[ \] **WSA-102-07:** Create an .env.template file in the root directory to document all required environment variables.  
-* \[ \] **WSA-102-08:** Create the file search\_agent/core/exceptions.py.  
-* \[ \] **WSA-102-09:** Define custom exception classes inheriting from a base SearchAgentError: ScrapingError, NoResultsError, and ConfigurationError.
+* \[x\] **WSA-102-04:** Create the file search\_agent/config.py.  
+* \[x\] **WSA-102-05:** Implement a Settings class in config.py using Pydantic's BaseSettings to load configuration from environment variables and a .env file.8  
+* \[x\] **WSA-102-06:** Add initial configuration variables to the Settings class, including placeholders for future API keys and EVALUATION\_DB\_PATH.  
+* \[x\] **WSA-102-07:** Create an .env.template file in the root directory to document all required environment variables.  
+* \[x\] **WSA-102-08:** Create the file search\_agent/core/exceptions.py.  
+* \[x\] **WSA-102-09:** Define custom exception classes inheriting from a base SearchAgentError: ScrapingError, NoResultsError, and ConfigurationError.
 
 #### **Ticket: WSA-103 \- Implement Selenium Search Module (MVP)**
 
