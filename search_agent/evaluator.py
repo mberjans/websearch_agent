@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 
 import typer
+from openai import OpenAI
 from search_agent.core.models import SearchModuleOutput
 from search_agent.config import settings
 
@@ -67,6 +68,89 @@ def measure_speed(module_name: str, query: str) -> float:
         raise ImportError(f"Could not import module '{module_name}': {e}")
     except AttributeError as e:
         raise AttributeError(f"Module '{module_name}' does not have a 'search' function: {e}")
+
+
+def evaluate_quality_llm(search_output: SearchModuleOutput) -> int:
+    """
+    Evaluate the quality and relevance of search results using an LLM.
+    
+    Args:
+        search_output: The SearchModuleOutput object containing search results
+        
+    Returns:
+        An integer score from 1-10 representing the quality/relevance of results
+        
+    Raises:
+        ValueError: If API key is not configured or LLM response is invalid
+        Exception: If API call fails
+    """
+    if not settings.OPENAI_API_KEY:
+        raise ValueError("OPENAI_API_KEY is not configured in settings")
+    
+    # Initialize OpenAI client
+    client = OpenAI(api_key=settings.OPENAI_API_KEY)
+    
+    # Format search results for the prompt
+    formatted_results = ""
+    for i, result in enumerate(search_output.results, 1):
+        formatted_results += f"{i}. Title: {result.title}\n"
+        formatted_results += f"   URL: {result.url}\n"
+        formatted_results += f"   Snippet: {result.snippet}\n\n"
+    
+    # Engineer a clear, specific prompt for quality evaluation
+    prompt = f"""You are an expert search quality analyst. Your task is to evaluate a list of search results based on their relevance and usefulness for the given user query.
+
+Please provide a single integer score from 1 to 10 based on the following scale:
+1: Completely irrelevant or spam.
+5: Partially relevant, but does not directly answer the user's intent.
+10: Perfectly relevant, high-quality, and directly addresses the user's intent.
+
+The user's query is:
+"{search_output.query}"
+
+Here are the search results to evaluate:
+---
+{formatted_results}---
+
+Based on the query and the provided results, what is the overall relevance score?
+Provide only the integer score and nothing else.
+
+Relevance Score (1-10):"""
+
+    try:
+        # Call the LLM API
+        response = client.chat.completions.create(
+            model=settings.LLM_EVALUATOR_MODEL,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=10,
+            temperature=0.0  # Use deterministic responses
+        )
+        
+        # Extract and parse the score
+        response_text = response.choices[0].message.content.strip()
+        
+        # Try to extract integer from response
+        try:
+            score = int(response_text)
+            if 1 <= score <= 10:
+                return score
+            else:
+                raise ValueError(f"Score {score} is outside valid range 1-10")
+        except ValueError:
+            # Try to extract first number from response if direct parsing fails
+            import re
+            numbers = re.findall(r'\d+', response_text)
+            if numbers:
+                score = int(numbers[0])
+                if 1 <= score <= 10:
+                    return score
+            
+            raise ValueError(f"Could not parse valid score from LLM response: '{response_text}'")
+            
+    except Exception as e:
+        raise Exception(f"LLM API call failed: {e}")
 
 
 def setup_database() -> None:

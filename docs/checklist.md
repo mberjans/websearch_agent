@@ -85,12 +85,12 @@
 
 #### **Ticket: WSA-302 \- Implement LLM-Based Quality Evaluation**
 
-* \[ \] **WSA-302-01:** Add the openai library (or other required LLM client) to dependencies.  
-* \[ \] **WSA-302-02:** Implement a function evaluate\_quality\_llm(search\_output: SearchModuleOutput).  
-* \[ \] **WSA-302-03:** Securely retrieve the necessary API key from the settings object in config.py.40  
-* \[ \] **WSA-302-04:** Engineer a clear, specific, zero-shot prompt that defines the task (rate relevance), the scale (1-10), and the required output format (a single integer) to ensure structured responses.44  
-* \[ \] **WSA-302-05:** Call the LLM API with the engineered prompt and search results.  
-* \[ \] **WSA-302-06:** Parse the integer score from the LLM's response and implement robust error handling for API or parsing failures.
+* \[x\] **WSA-302-01:** Add the openai library (or other required LLM client) to dependencies.  
+* \[x\] **WSA-302-02:** Implement a function evaluate\_quality\_llm(search\_output: SearchModuleOutput).  
+* \[x\] **WSA-302-03:** Securely retrieve the necessary API key from the settings object in config.py.40  
+* \[x\] **WSA-302-04:** Engineer a clear, specific, zero-shot prompt that defines the task (rate relevance), the scale (1-10), and the required output format (a single integer) to ensure structured responses.44  
+* \[x\] **WSA-302-05:** Call the LLM API with the engineered prompt and search results.  
+* \[x\] **WSA-302-06:** Parse the integer score from the LLM's response and implement robust error handling for API or parsing failures.
 
 #### **Ticket: WSA-303 \- Implement NLP-Based Quality Evaluation**
 
