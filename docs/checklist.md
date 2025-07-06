@@ -42,14 +42,14 @@
 
 #### **Ticket: WSA-104 \- Unit Tests for Selenium Search Module**
 
-* \[ \] **WSA-104-01:** Create the test file tests/test\_selenium\_search.py.  
-* \[ \] **WSA-104-02:** Add pytest and pytest-mock to the development dependencies in pyproject.toml.  
-* \[ \] **WSA-104-03:** Write a test that uses the mocker fixture to patch the selenium.webdriver.Chrome object.  
-* \[ \] **WSA-104-04:** Create a sample HTML string that mimics the DuckDuckGo results page structure.  
-* \[ \] **WSA-104-05:** Configure the mocked driver's find\_elements method to return mock web elements based on the sample HTML.  
-* \[ \] **WSA-104-06:** Write a test to call the search() function and assert that the returned object is a valid SearchModuleOutput instance.  
-* \[ \] **WSA-104-07:** Assert that the content (titles, URLs) of the parsed results matches the expected data from the mock HTML.  
-* \[ \] **WSA-104-08:** Write a test where the mocked driver raises a TimeoutException and assert that the search() function correctly catches it and raises a custom ScrapingError.
+* \[x\] **WSA-104-01:** Create the test file tests/test\_selenium\_search.py.  
+* \[x\] **WSA-104-02:** Add pytest and pytest-mock to the development dependencies in pyproject.toml.  
+* \[x\] **WSA-104-03:** Write a test that uses the mocker fixture to patch the selenium.webdriver.Chrome object.  
+* \[x\] **WSA-104-04:** Create a sample HTML string that mimics the DuckDuckGo results page structure.  
+* \[x\] **WSA-104-05:** Configure the mocked driver's find\_elements method to return mock web elements based on the sample HTML.  
+* \[x\] **WSA-104-06:** Write a test to call the search() function and assert that the returned object is a valid SearchModuleOutput instance.  
+* \[x\] **WSA-104-07:** Assert that the content (titles, URLs) of the parsed results matches the expected data from the mock HTML.  
+* \[x\] **WSA-104-08:** Write a test where the mocked driver raises a TimeoutException and assert that the search() function correctly catches it and raises a custom ScrapingError.
 
 ### **Phase 2: Architectural Validation**
 
