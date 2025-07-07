@@ -1,377 +1,568 @@
-### **Phase 1: Foundational Architecture & MVP**
-
-This phase focuses on establishing the project's core structure and delivering the first functional search module.
-
----
-
-Ticket ID: WSA-101  
-Title: Setup Project Structure, Dependency, and Environment Management  
-Description:  
-Initialize the project with a standardized, modular structure to ensure maintainability and scalability.1 This task involves creating the directory layout and configuring the dependency management tool.
-
-Acceptance Criteria:
-
-1. The project directory structure is created as specified in Section 1.1 of the development plan.  
-2. The project is initialized with Poetry for dependency management. Using Poetry over pip is mandated due to its superior dependency resolution and ability to create reproducible environments with a poetry.lock file, preventing "dependency hell".4  
-3. A pyproject.toml file is created, defining project metadata and initial dependencies.  
-4. A .gitignore file is created to exclude virtual environments, .env files, and other non-source files from version control.
-
----
-
-Ticket ID: WSA-102  
-Title: Implement Core Interfaces and Configuration Management  
-Description:  
-Develop the core data contracts and configuration system that will be used by all modules. This is critical for ensuring interoperability and secure handling of credentials.  
-Acceptance Criteria:
-
-1. Pydantic models for SearchResult and SearchModuleOutput are created in search\_agent/core/models.py to enforce a standardized JSON I/O schema.  
-2. A centralized configuration module search\_agent/config.py is created using Pydantic's BaseSettings. This approach provides type-safe, validated settings loaded from environment variables, which is a best practice for security and flexibility.10  
-3. An .env.template file is created to document required environment variables. The actual .env file must be included in .gitignore.  
-4. Custom exception classes (ScrapingError, NoResultsError, etc.) are defined in search\_agent/core/exceptions.py.
-
----
-
-Ticket ID: WSA-103  
-Title: Implement Selenium Search Module (MVP)  
-Description:  
-Develop the first search module using Selenium. This module will serve as the proof-of-concept for the dual-mode (CLI/library) architecture and headless browser operation.  
-Acceptance Criteria:
-
-1. Create search\_agent/modules/selenium\_search.py.  
-2. The module must implement the dual-mode pattern using Typer, providing both an importable search() function and a command-line interface.14  
-3. Selenium WebDriver is configured to run Chrome or Firefox in headless mode (--headless=new) for server-side execution.20  
-4. The script successfully navigates to DuckDuckGo, submits a query, and scrapes the titles, URLs, and snippets from the first page of results.26  
-5. The output is formatted into the standardized JSON structure using the SearchModuleOutput Pydantic model.  
-6. The WebDriver instance is properly closed in a finally block to prevent resource leaks.
-
----
-
-Ticket ID: WSA-104  
-Title: Unit Tests for Selenium Search Module  
-Description:  
-Create a suite of unit tests to validate the functionality of the Selenium search module.  
-Acceptance Criteria:
-
-1. A tests/test\_selenium\_search.py file is created.  
-2. Tests are written to verify the core logic of the search() function.  
-3. Mocking is used to simulate web requests and HTML responses, so tests can run without actual browser interaction.  
-4. Tests verify that the module correctly parses sample HTML and produces the expected JSON output.  
-5. Tests confirm that custom exceptions are raised under appropriate failure conditions (e.g., page timeout, no results found).
-
-### **Phase 2: Architectural Validation**
-
-This phase proves the modular architecture by adding a second, technologically distinct search module.
-
----
-
-Ticket ID: WSA-201  
-Title: Implement Playwright Search Module  
-Description:  
-Develop a second search module using Playwright to validate the system's modularity. Playwright is chosen for its modern architecture, native asyncio support, and performance advantages over Selenium.32
-
-Acceptance Criteria:
-
-1. Create search\_agent/modules/playwright\_search.py.  
-2. The module must adhere to the exact same dual-mode and standardized JSON I/O interfaces as the Selenium module.  
-3. The core search() function must be implemented using Playwright's async API.  
-4. The module must operate in headless mode.  
-5. The module successfully scrapes search results from the target search engine.
-
----
-
-Ticket ID: WSA-202  
-Title: Unit Tests for Playwright Search Module  
-Description:  
-Create unit tests for the Playwright search module to ensure its correctness and adherence to the system's interfaces.  
-Acceptance Criteria:
-
-1. A tests/test\_playwright\_search.py file is created.  
-2. Async-compatible tests are written for the async def search() function.  
-3. Tests use mocking to avoid actual browser execution and validate the parsing and JSON output logic against sample HTML.
-
-### **Phase 3: The Quantitative Evaluator Module**
-
-This phase focuses on building the tools to measure and log the performance and quality of all search modules.
-
----
-
-Ticket ID: WSA-301  
-Title: Implement Speed Evaluation Logic  
-Description:  
-Implement the functionality within evaluator.py to programmatically execute any search module and accurately measure its execution time.  
-Acceptance Criteria:
-
-1. An evaluator.py module is created.  
-2. A function is implemented that can dynamically import and run the search() function from any given module.  
-3. Execution time is measured using time.perf\_counter() for high precision, as it is more suitable for benchmarking than time.time().38  
-4. The measured duration is returned for logging.
-
----
-
-Ticket ID: WSA-302  
-Title: Implement LLM-Based Quality Evaluation  
-Description:  
-Integrate with an LLM API to provide a human-like quality and relevance score for a given set of search results.  
-Acceptance Criteria:
-
-1. The evaluator integrates with an LLM client (e.g., OpenAI). API keys are managed via the central config.py module.43  
-2. A well-defined prompt is engineered to instruct the LLM to return a single integer score (1-10) based on the relevance of the results to the query. The prompt must be specific to ensure consistent, structured output.48  
-3. The function takes a SearchModuleOutput object as input and returns the integer score from the LLM.
-
----
-
-Ticket ID: WSA-303  
-Title: Implement NLP-Based Quality Evaluation  
-Description:  
-Implement a non-LLM, deterministic quality scoring method using cosine similarity to measure the semantic relevance between the query and the result snippets.  
-Acceptance Criteria:
-
-1. The evaluator integrates the spaCy library.  
-2. A function is created that takes a query string and a list of result snippets.  
-3. The function calculates the cosine similarity between the query's vector and the averaged vector of the result snippets.53  
-4. The function returns a similarity score between 0 and 1\.
-
----
-
-Ticket ID: WSA-304  
-Title: Implement SQLite Logging for Evaluation Results  
-Description:  
-Create a data persistence layer using SQLite to log all evaluation metrics for later analysis. SQLite is chosen for its simplicity and lack of external dependencies.58
-
-Acceptance Criteria:
-
-1. A function is created to initialize an SQLite database (evaluation\_log.db) with the schema defined in Table 1 of the development plan.  
-2. A function is implemented to insert a new record into the log table, containing the module name, query, execution time, quality scores, and other metadata.  
-3. All database interactions are handled via the sqlite3 module.
-
-### **Phase 4: The Central Orchestrator**
-
-This phase involves building the system's brain, which manages modules and combines their results.
-
----
-
-Ticket ID: WSA-401  
-Title: Implement Concurrent Module Execution  
-Description:  
-Implement the core logic of the Orchestrator to run multiple search modules concurrently for a single query. asyncio is the chosen technology as the search tasks are I/O-bound.63
-
-Acceptance Criteria:
-
-1. An orchestrator.py module is created.  
-2. The orchestrator uses asyncio.gather() to execute multiple search modules in parallel.  
-3. Synchronous modules (like Selenium) are wrapped with asyncio.to\_thread() to prevent blocking the event loop.  
-4. The orchestrator gracefully handles and logs exceptions from individual modules, allowing the system to return partial results if one module fails.
-
----
-
-Ticket ID: WSA-402  
-Title: Implement Result Merging and De-duplication  
-Description:  
-Develop an algorithm to combine the result lists from multiple modules into a single, de-duplicated list.  
-Acceptance Criteria:
-
-1. A function is created that takes a list of SearchModuleOutput objects.  
-2. Results are de-duplicated based on the url field. An efficient approach using a dictionary or a set to track seen URLs should be used to maintain performance.69  
-3. The function returns a single, de-duplicated list of SearchResult objects.
-
----
-
-Ticket ID: WSA-403  
-Title: Implement Initial Re-ranking Strategy  
-Description:  
-Implement a basic, heuristic-based re-ranking algorithm to order the final merged list of results.  
-Acceptance Criteria:
-
-1. A re-ranking function is created that takes the de-duplicated list of results.  
-2. The initial strategy re-ranks results based on their source (e.g., API-based results are prioritized over scraped results).  
-3. The function is designed to be pluggable, allowing for more advanced strategies (like Cross-Encoder or MMR) to be added later.73
-
-### **Phase 5: Integration of API-Based Search Modules**
-
-This phase expands the system's capabilities with fast and reliable commercial search APIs.
-
----
-
-Ticket ID: WSA-501  
-Title: Implement Brave Search API Module  
-Description:  
-Create a new search module that queries the Brave Search API. This will provide a high-speed, reliable data source.  
-Acceptance Criteria:
-
-1. Create search\_agent/modules/brave\_api\_search.py.  
-2. The module uses an async HTTP client (like httpx) or the official brave-search Python library to interact with the Brave Search API.79  
-3. The module adheres to the standard dual-mode and JSON output format.  
-4. The API key is securely retrieved from the central configuration.
-
----
-
-Ticket ID: WSA-502  
-Title: Implement Google Custom Search API Module  
-Description:  
-Create a new search module that queries the Google Custom Search Engine (CSE) API.  
-Acceptance Criteria:
-
-1. Create search\_agent/modules/google\_cse\_search.py.  
-2. The module uses the official Google API Python Client to interact with the CSE API.84  
-3. The module adheres to the standard dual-mode and JSON output format.  
-4. The API Key and Search Engine ID (CX) are securely retrieved from the central configuration.
-
-### **Phase 6: Expansion with Specialized Python Libraries**
-
-This final phase completes the suite of search agents with modules for other powerful libraries.
-
----
-
-Ticket ID: WSA-601  
-Title: Implement httpx + BeautifulSoup Search Module  
-Description:  
-Develop a lightweight, high-speed search module for simple, static HTML search engines. httpx is chosen for its performance and async capabilities, making it ideal for this task.86
-
-Acceptance Criteria:
-
-1. Create search\_agent/modules/httpx\_search.py.  
-2. The module uses httpx to fetch HTML content asynchronously.  
-3. BeautifulSoup is used to parse the HTML and extract results.  
-4. The module adheres to all standard architectural patterns (dual-mode, JSON output).
-
----
-
-Ticket ID: WSA-602  
-Title: Implement Scrapy Search Module  
-Description:  
-Develop a search module using the Scrapy framework. Scrapy is chosen for its power in handling more complex, large-scale scraping tasks that might involve following links or complex data extraction pipelines.32
-
-Acceptance Criteria:
-
-1. Create search\_agent/modules/scrapy\_search.py.  
-2. The module is structured as a self-contained Scrapy project that can be invoked from the main search() function.  
-3. The Scrapy spider is configured to perform a search and extract results.  
-4. The module adheres to all standard architectural patterns (dual-mode, JSON output).
-
-### **Phase 7: Answer Generation from Search Results**
-
-#### **Category: Web Content Extraction**
-
-### WSA-ANS-001: Implement `web_content_extractor.py` module
-- [x] WSA-ANS-001-T01: Create `search_agent/modules/web_content_extractor.py` file.
-- [x] WSA-ANS-001-T02: Implement `async def extract_main_content(url: str) -> str:` function signature.
-- [x] WSA-ANS-001-T03: Add `httpx` for fetching content within `extract_main_content`.
-- [x] WSA-ANS-001-T04: Add `BeautifulSoup` for HTML parsing within `extract_main_content`.
-- [x] WSA-ANS-001-T05: Implement logic to extract main textual content (e.g., from `<article>`, `<main>`, common content divs).
-
-### WSA-ANS-002: Implement content cleaning in `web_content_extractor.py`
-- [x] WSA-ANS-002-T01: Implement removal of extra whitespace from extracted text.
-- [x] WSA-ANS-002-T02: Implement removal of script tags from extracted content.
-- [x] WSA-ANS-002-T03: Implement removal of style tags from extracted content.
-
-### WSA-ANS-003: Implement error handling for `web_content_extractor.py`
-- [x] WSA-ANS-003-T01: Define `ScrapingError` custom exception.
-- [x] WSA-ANS-003-T02: Add `try-except` block for `httpx.RequestError`.
-- [x] WSA-ANS-003-T03: Add `try-except` block for `httpx.TimeoutException`.
-- [x] WSA-ANS-003-T04: Add general `Exception` handling for unexpected errors during HTTP requests.
-- [x] WSA-ANS-003-T05: Implement error handling for `BeautifulSoup` parsing issues.
-- [x] WSA-ANS-003-T06: Implement graceful handling if main content cannot be found.
-
-#### **Category: Answer Synthesis**
-
-### WSA-ANS-004: Implement `answer_synthesizer.py` module
-- [x] WSA-ANS-004-T01: Create `search_agent/answer_synthesizer.py` file.
-- [x] WSA-ANS-004-T02: Implement `async def synthesize_answer(query: str, content_snippets: List[str]) -> str:` function signature.
-
-### WSA-ANS-005: Develop LLM prompting strategy for `answer_synthesizer.py`
-- [x] WSA-ANS-005-T01: Design initial LLM prompt for `synthesize_answer`.
-- [x] WSA-ANS-005-T02: Refine prompt to instruct LLM as an expert summarizer/answer generator.
-- [x] WSA-ANS-005-T03: Refine prompt to emphasize factual accuracy and direct relevance.
-- [x] WSA-ANS-005-T04: Refine prompt to instruct LLM to avoid hallucination and use only provided content.
-- [x] WSA-ANS-005-T05: Refine prompt to instruct LLM to be concise and to the point.
-
-### WSA-ANS-006: Integrate LLM API call in `answer_synthesizer.py`
-- [x] WSA-ANS-006-T01: Implement LLM API call (e.g., OpenAI's chat completion API) within `synthesize_answer`.
-- [x] WSA-ANS-006-T02: Implement extraction of the synthesized answer from LLM response.
-
-#### **Category: Answer Evaluation**
-
-### WSA-ANS-007: Implement `answer_evaluator.py` module
-- [x] WSA-ANS-007-T01: Create `search_agent/answer_evaluator.py` file.
-- [x] WSA-ANS-007-T02: Implement `async def evaluate_answer_quality(query: str, synthesized_answer: str, original_content: List[str]) -> Dict[str, Any]:` function signature.
-
-### WSA-ANS-008: Develop LLM prompting strategy for `answer_evaluator.py`
-- [x] WSA-ANS-008-T01: Design initial LLM prompt for factual consistency check.
-- [x] WSA-ANS-008-T02: Design initial LLM prompt for relevance scoring.
-- [x] WSA-ANS-008-T03: Refine prompts for critical assessment and identifying inconsistencies/irrelevancies.
-
-### WSA-ANS-009: Implement NLP-based metrics (optional) in `answer_evaluator.py`
-- [x] WSA-ANS-009-T01: Integrate `spacy` library for NLP-based metrics.
-- [x] WSA-ANS-009-T02: Implement cosine similarity calculation between query/answer.
-- [x] WSA-ANS-009-T03: Implement cosine similarity calculation between answer/original content.
-
-#### **Category: Answer Orchestration**
-
-### WSA-ANS-010: Implement `answer_orchestrator.py` module
-- [x] WSA-ANS-010-T01: Create `search_agent/answer_orchestrator.py` file.
-- [x] WSA-ANS-010-T02: Implement `async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3) -> Dict[str, Any]:` function signature.
-
-### WSA-ANS-011: Integrate `search_agent.orchestrator.run_orchestration` call
-- [x] WSA-ANS-011-T01: Call `search_agent.orchestrator.run_orchestration(query)` within `orchestrate_answer_generation`.
-
-### WSA-ANS-012: Implement link selection logic in `answer_orchestrator.py`
-- [x] WSA-ANS-012-T01: Implement logic to select top `N` unique URLs from search results.
-
-### WSA-ANS-013: Implement web content extraction calls in `answer_orchestrator.py`
-- [x] WSA-ANS-013-T01: Implement loop to call `web_content_extractor.extract_main_content(url)` for each selected URL.
-
-### WSA-ANS-014: Implement content aggregation in `answer_orchestrator.py`
-- [x] WSA-ANS-014-T01: Aggregate extracted text content from all selected URLs into a single collection.
-
-### WSA-ANS-015: Integrate `answer_synthesizer.synthesize_answer` call
-- [x] WSA-ANS-015-T01: Call `answer_synthesizer.synthesize_answer(query, aggregated_content)` within `orchestrate_answer_generation`.
-
-### WSA-ANS-016: Integrate `answer_evaluator.evaluate_answer_quality` call
-- [x] WSA-ANS-016-T01: Call `answer_evaluator.evaluate_answer_quality(query, synthesized_answer, aggregated_content)` within `orchestrate_answer_generation`.
-
-### WSA-ANS-017: Implement final output structure in `answer_orchestrator.py`
-- [x] WSA-ANS-017-T01: Return a structured object (e.g., `FinalAnswerOutput`) from `orchestrate_answer_generation`.
-- [x] WSA-ANS-017-T02: Ensure `SynthesizedAnswer` object is included in the final output.
-- [x] WSA-ANS-017-T03: Ensure `AnswerEvaluationResult` object is included in the final output.
-- [x] WSA-ANS-017-T04: Include relevant metadata (e.g., total execution time) in the final output.
-
-#### **Category: Data Models**
-
-### WSA-ANS-018: Add `SynthesizedAnswer` Pydantic model
-- [x] WSA-ANS-018-T01: Add `SynthesizedAnswer` Pydantic model to `search_agent/core/models.py`.
-- [x] WSA-ANS-018-T02: Add `answer` field to `SynthesizedAnswer`.
-- [x] WSA-ANS-018-T03: Add `source_urls` field to `SynthesizedAnswer`.
-- [x] WSA-ANS-018-T04: Add `timestamp_utc` field to `SynthesizedAnswer`.
-- [x] WSA-ANS-018-T05: Add `execution_time_seconds` field to `SynthesizedAnswer`.
-
-### WSA-ANS-019: Add `AnswerEvaluationResult` Pydantic model
-- [x] WSA-ANS-019-T01: Add `AnswerEvaluationResult` Pydantic model to `search_agent/core/models.py`.
-- [x] WSA-ANS-019-T02: Add `factual_consistency_score` field to `AnswerEvaluationResult`.
-- [x] WSA-ANS-019-T03: Add `relevance_score` field to `AnswerEvaluationResult`.
-- [x] WSA-ANS-019-T04: Add `completeness_score` field to `AnswerEvaluationResult`.
-- [x] WSA-ANS-019-T05: Add `conciseness_score` field to `AnswerEvaluationResult`.
-- [x] WSA-ANS-019-T06: Add `llm_feedback` field to `AnswerEvaluationResult`.
-
-### WSA-ANS-020: Add `FinalAnswerOutput` Pydantic model
-- [x] WSA-ANS-020-T01: Add `FinalAnswerOutput` Pydantic model to `search_agent/core/models.py`.
-- [x] WSA-ANS-020-T02: Ensure `FinalAnswerOutput` encapsulates `SynthesizedAnswer`.
-- [x] WSA-ANS-020-T03: Ensure `FinalAnswerOutput` encapsulates `AnswerEvaluationResult`.
-
-#### **Category: Robustness and Error Handling (Cross-cutting)**
-
-### WSA-ANS-021: Implement robust LLM interaction error handling
-- [x] WSA-ANS-021-T01: Implement `try-except` blocks for `openai.APIError`.
-- [x] WSA-ANS-021-T02: Implement `try-except` blocks for `openai.RateLimitError`.
-- [x] WSA-ANS-021-T03: Implement `try-except` blocks for other LLM-related exceptions.
-- [x] WSA-ANS-021-T04: Implement retry mechanisms with exponential backoff for transient LLM errors.
-
-### WSA-ANS-022: Handle low-quality/error pages during content extraction
-- [x] WSA-ANS-022-T01: Implement logic to flag content if too short.
-- [x] WSA-ANS-022-T02: Implement logic to flag content if irrelevant.
-- [x] WSA-ANS-022-T03: Implement logic to flag content if it indicates an error page.
-- [x] WSA-ANS-022-T04: Implement logic to skip low-quality content to prevent feeding to LLM.
-
-### WSA-ANS-023: Graceful handling for no answer generation
-- [x] WSA-ANS-023-T01: Implement logic to detect if LLM fails to synthesize a coherent answer.
-- [x] WSA-ANS-023-T02: Implement logic to detect if no valid content can be extracted from any links.
-- [x] WSA-ANS-023-T03: Implement graceful indication to the user if no answer can be generated.
+# Implementation Checklist
+
+This document provides a detailed checklist of tasks for implementing the CLI arguments system for the Clinical Metabolomics Oracle Web Search Agent. Each task has a unique ID combining the ticket ID and task ID for tracking purposes.
+
+## How to Use This Checklist
+
+- [ ] Mark tasks as completed by checking the boxes
+- [ ] Complete all tasks for a ticket before marking the ticket as done
+- [ ] Follow the dependencies between tickets
+- [ ] Update this document as new tasks are identified
+
+## Core Infrastructure
+
+### CORE-001: Fix duplicate command definition
+
+- [x] **CORE-001.1**: Identify the duplicate `generate-answer` command in `answer_orchestrator.py`
+- [x] **CORE-001.2**: Determine which implementation is more recent/complete
+- [x] **CORE-001.3**: Remove the duplicate implementation
+- [x] **CORE-001.4**: Test that the remaining implementation works correctly
+- [x] **CORE-001.5**: Update any imports or references affected by the change
+
+### CORE-002: Create Configuration class
+
+- [ ] **CORE-002.1**: Create a new `Configuration` class in `config.py` using Pydantic
+- [ ] **CORE-002.2**: Define nested configuration classes for search, LLM, output, and advanced options
+- [ ] **CORE-002.3**: Set default values for all configuration parameters
+- [ ] **CORE-002.4**: Add type hints and docstrings for all properties
+- [ ] **CORE-002.5**: Implement basic initialization from dictionary
+- [ ] **CORE-002.6**: Add utility methods for configuration manipulation
+- [ ] **CORE-002.7**: Test basic configuration creation and access
+
+### CORE-003: Implement configuration loading from environment
+
+- [ ] **CORE-003.1**: Create a `from_env` class method in the `Configuration` class
+- [ ] **CORE-003.2**: Map environment variables to configuration properties
+- [ ] **CORE-003.3**: Handle type conversion for different property types
+- [ ] **CORE-003.4**: Implement fallback to default values
+- [ ] **CORE-003.5**: Add error handling for invalid environment values
+- [ ] **CORE-003.6**: Test loading configuration from environment variables
+
+### CORE-004: Implement configuration validation
+
+- [ ] **CORE-004.1**: Add validators for critical configuration properties
+- [ ] **CORE-004.2**: Implement cross-field validation where needed
+- [ ] **CORE-004.3**: Add custom error messages for validation failures
+- [ ] **CORE-004.4**: Ensure validation runs on configuration creation
+- [ ] **CORE-004.5**: Test validation with valid and invalid configurations
+
+### CORE-005: Create main CLI script
+
+- [ ] **CORE-005.1**: Create `websearch_agent.py` in the project root
+- [ ] **CORE-005.2**: Set up the Typer app instance
+- [ ] **CORE-005.3**: Create the main command function structure
+- [ ] **CORE-005.4**: Implement basic argument parsing
+- [ ] **CORE-005.5**: Add entry point for running the script directly
+- [ ] **CORE-005.6**: Test basic script execution
+- [ ] **CORE-005.7**: Add shebang and make the script executable
+
+### CORE-006: Implement backward compatibility
+
+- [ ] **CORE-006.1**: Identify all functions that need to maintain backward compatibility
+- [ ] **CORE-006.2**: Add optional configuration parameters to these functions
+- [ ] **CORE-006.3**: Implement fallback to environment variables when configuration is not provided
+- [ ] **CORE-006.4**: Test existing code with new configuration system
+- [ ] **CORE-006.5**: Update function signatures while maintaining compatibility
+- [ ] **CORE-006.6**: Add deprecation warnings for old usage patterns
+
+### CORE-007: Add PyYAML dependency
+
+- [ ] **CORE-007.1**: Add PyYAML to requirements.txt
+- [ ] **CORE-007.2**: Update setup.py if present
+- [ ] **CORE-007.3**: Test installation with the new dependency
+- [ ] **CORE-007.4**: Add version constraint if needed
+- [ ] **CORE-007.5**: Document the new dependency
+
+### CORE-008: Create directory structure for outputs
+
+- [ ] **CORE-008.1**: Design the output directory structure
+- [ ] **CORE-008.2**: Implement function to create output directories
+- [ ] **CORE-008.3**: Add project-based organization of results
+- [ ] **CORE-008.4**: Implement timestamp-based file naming
+- [ ] **CORE-008.5**: Add function to generate full output paths
+- [ ] **CORE-008.6**: Test directory creation and path generation
+
+## Command-Line Interface
+
+### CLI-001: Implement core arguments
+
+- [ ] **CLI-001.1**: Add `query` argument to the main command
+- [ ] **CLI-001.2**: Implement `output-dir` option
+- [ ] **CLI-001.3**: Add `output-file` option
+- [ ] **CLI-001.4**: Implement `project-name` option
+- [ ] **CLI-001.5**: Add help text for all arguments
+- [ ] **CLI-001.6**: Test argument parsing
+- [ ] **CLI-001.7**: Implement validation for core arguments
+
+### CLI-002: Implement search configuration arguments
+
+- [ ] **CLI-002.1**: Add `search-provider` option
+- [ ] **CLI-002.2**: Implement `max-results` option
+- [ ] **CLI-002.3**: Add `max-urls` option
+- [ ] **CLI-002.4**: Implement `timeout` option
+- [ ] **CLI-002.5**: Add `no-cache` flag
+- [ ] **CLI-002.6**: Implement `force-refresh` flag
+- [ ] **CLI-002.7**: Add help text for all arguments
+- [ ] **CLI-002.8**: Test search configuration argument parsing
+
+### CLI-003: Implement LLM configuration arguments
+
+- [ ] **CLI-003.1**: Add `llm-provider` option
+- [ ] **CLI-003.2**: Implement `llm-model` option
+- [ ] **CLI-003.3**: Add `temperature` option
+- [ ] **CLI-003.4**: Implement `max-tokens` option
+- [ ] **CLI-003.5**: Add `no-evaluation` flag
+- [ ] **CLI-003.6**: Add help text for all arguments
+- [ ] **CLI-003.7**: Test LLM configuration argument parsing
+
+### CLI-004: Implement advanced options
+
+- [ ] **CLI-004.1**: Add `config-file` option
+- [ ] **CLI-004.2**: Implement `proxy` option
+- [ ] **CLI-004.3**: Add `user-agent` option
+- [ ] **CLI-004.4**: Implement `retry-count` option
+- [ ] **CLI-004.5**: Add `extract-images` flag
+- [ ] **CLI-004.6**: Implement `save-html` flag
+- [ ] **CLI-004.7**: Add `debug` flag
+- [ ] **CLI-004.8**: Add help text for all arguments
+- [ ] **CLI-004.9**: Test advanced option parsing
+
+### CLI-005: Implement logging configuration
+
+- [ ] **CLI-005.1**: Add `verbose` flag
+- [ ] **CLI-005.2**: Implement `quiet` flag
+- [ ] **CLI-005.3**: Create logging setup function
+- [ ] **CLI-005.4**: Configure logging levels based on flags
+- [ ] **CLI-005.5**: Add log formatting
+- [ ] **CLI-005.6**: Test logging with different verbosity levels
+
+### CLI-006: Implement error handling
+
+- [ ] **CLI-006.1**: Add try-except blocks around main functionality
+- [ ] **CLI-006.2**: Implement user-friendly error messages
+- [ ] **CLI-006.3**: Add proper exit codes for different error types
+- [ ] **CLI-006.4**: Implement keyboard interrupt handling
+- [ ] **CLI-006.5**: Add context information to error messages
+- [ ] **CLI-006.6**: Test error handling with various error conditions
+
+### CLI-007: Create shell wrapper script
+
+- [ ] **CLI-007.1**: Create `websearch-agent.sh` script
+- [ ] **CLI-007.2**: Add virtual environment activation
+- [ ] **CLI-007.3**: Implement argument passing
+- [ ] **CLI-007.4**: Make the script executable
+- [ ] **CLI-007.5**: Test the wrapper script
+- [ ] **CLI-007.6**: Add Windows batch file equivalent
+
+### CLI-008: Add version information
+
+- [ ] **CLI-008.1**: Add version constant to the package
+- [ ] **CLI-008.2**: Implement `--version` flag
+- [ ] **CLI-008.3**: Add version information to help text
+- [ ] **CLI-008.4**: Create version display function
+- [ ] **CLI-008.5**: Test version display
+
+## Configuration System
+
+### CONFIG-001: Implement YAML configuration file parsing
+
+- [ ] **CONFIG-001.1**: Add `from_file` class method to `Configuration` class
+- [ ] **CONFIG-001.2**: Implement YAML file loading
+- [ ] **CONFIG-001.3**: Add error handling for file operations
+- [ ] **CONFIG-001.4**: Implement validation of loaded configuration
+- [ ] **CONFIG-001.5**: Add support for overriding file values with command-line arguments
+- [ ] **CONFIG-001.6**: Test configuration loading from YAML files
+
+### CONFIG-002: Create template configuration file
+
+- [ ] **CONFIG-002.1**: Create `config` directory
+- [ ] **CONFIG-002.2**: Create `default_config.yaml` template
+- [ ] **CONFIG-002.3**: Add all configuration sections with default values
+- [ ] **CONFIG-002.4**: Add comments explaining each option
+- [ ] **CONFIG-002.5**: Test loading the template configuration
+- [ ] **CONFIG-002.6**: Add example values for common scenarios
+
+### CONFIG-003: Implement configuration merging
+
+- [ ] **CONFIG-003.1**: Create function to merge configurations from different sources
+- [ ] **CONFIG-003.2**: Implement priority order for configuration sources
+- [ ] **CONFIG-003.3**: Add deep merging of nested configuration
+- [ ] **CONFIG-003.4**: Handle special cases like list merging
+- [ ] **CONFIG-003.5**: Test configuration merging with various scenarios
+
+### CONFIG-004: Add configuration file validation
+
+- [ ] **CONFIG-004.1**: Implement schema validation for configuration files
+- [ ] **CONFIG-004.2**: Add checks for required fields
+- [ ] **CONFIG-004.3**: Implement type checking for configuration values
+- [ ] **CONFIG-004.4**: Add validation for field constraints
+- [ ] **CONFIG-004.5**: Create user-friendly error messages for validation failures
+- [ ] **CONFIG-004.6**: Test validation with valid and invalid configuration files
+
+### CONFIG-005: Implement environment variable export
+
+- [ ] **CONFIG-005.1**: Add `to_env_vars` method to `Configuration` class
+- [ ] **CONFIG-005.2**: Implement conversion of configuration to environment variables
+- [ ] **CONFIG-005.3**: Add `set_env_vars` method to set environment variables
+- [ ] **CONFIG-005.4**: Handle special cases like nested configuration
+- [ ] **CONFIG-005.5**: Test environment variable export and setting
+
+### CONFIG-006: Add support for .env files
+
+- [ ] **CONFIG-006.1**: Add python-dotenv dependency
+- [ ] **CONFIG-006.2**: Implement loading environment variables from .env files
+- [ ] **CONFIG-006.3**: Add support for multiple .env file locations
+- [ ] **CONFIG-006.4**: Implement override behavior for .env variables
+- [ ] **CONFIG-006.5**: Test configuration loading from .env files
+
+### CONFIG-007: Implement configuration serialization
+
+- [ ] **CONFIG-007.1**: Add `to_dict` method to `Configuration` class
+- [ ] **CONFIG-007.2**: Implement `to_yaml` method
+- [ ] **CONFIG-007.3**: Add `save` method to save configuration to file
+- [ ] **CONFIG-007.4**: Handle serialization of special types
+- [ ] **CONFIG-007.5**: Test configuration serialization and saving
+
+### CONFIG-008: Add configuration documentation
+
+- [ ] **CONFIG-008.1**: Document all configuration options
+- [ ] **CONFIG-008.2**: Add examples for common configurations
+- [ ] **CONFIG-008.3**: Create a configuration reference guide
+- [ ] **CONFIG-008.4**: Document environment variable mappings
+- [ ] **CONFIG-008.5**: Add configuration file format documentation
+
+## Search Module Updates
+
+### SEARCH-001: Update orchestrator for configuration
+
+- [ ] **SEARCH-001.1**: Modify `run_orchestration` to accept a configuration object
+- [ ] **SEARCH-001.2**: Update function signature while maintaining backward compatibility
+- [ ] **SEARCH-001.3**: Implement configuration parameter extraction
+- [ ] **SEARCH-001.4**: Update module selection based on configuration
+- [ ] **SEARCH-001.5**: Test orchestrator with configuration object
+- [ ] **SEARCH-001.6**: Update related functions to use configuration
+
+### SEARCH-002: Update selenium search module
+
+- [ ] **SEARCH-002.1**: Modify selenium search function to accept configuration parameters
+- [ ] **SEARCH-002.2**: Update function signature while maintaining backward compatibility
+- [ ] **SEARCH-002.3**: Implement configuration parameter extraction
+- [ ] **SEARCH-002.4**: Update search behavior based on configuration
+- [ ] **SEARCH-002.5**: Test selenium search with configuration object
+
+### SEARCH-003: Update playwright search module
+
+- [ ] **SEARCH-003.1**: Modify playwright search function to accept configuration parameters
+- [ ] **SEARCH-003.2**: Update function signature while maintaining backward compatibility
+- [ ] **SEARCH-003.3**: Implement configuration parameter extraction
+- [ ] **SEARCH-003.4**: Update search behavior based on configuration
+- [ ] **SEARCH-003.5**: Test playwright search with configuration object
+
+### SEARCH-004: Update brave API search module
+
+- [ ] **SEARCH-004.1**: Modify brave API search function to accept configuration parameters
+- [ ] **SEARCH-004.2**: Update function signature while maintaining backward compatibility
+- [ ] **SEARCH-004.3**: Implement configuration parameter extraction
+- [ ] **SEARCH-004.4**: Update search behavior based on configuration
+- [ ] **SEARCH-004.5**: Test brave API search with configuration object
+
+### SEARCH-005: Update Google CSE search module
+
+- [ ] **SEARCH-005.1**: Modify Google CSE search function to accept configuration parameters
+- [ ] **SEARCH-005.2**: Update function signature while maintaining backward compatibility
+- [ ] **SEARCH-005.3**: Implement configuration parameter extraction
+- [ ] **SEARCH-005.4**: Update search behavior based on configuration
+- [ ] **SEARCH-005.5**: Test Google CSE search with configuration object
+
+### SEARCH-006: Implement search provider selection
+
+- [ ] **SEARCH-006.1**: Create function to parse provider selection string
+- [ ] **SEARCH-006.2**: Implement module filtering based on selected providers
+- [ ] **SEARCH-006.3**: Add validation for provider names
+- [ ] **SEARCH-006.4**: Update orchestrator to use provider selection
+- [ ] **SEARCH-006.5**: Test search with different provider selections
+
+### SEARCH-007: Add proxy support to search modules
+
+- [ ] **SEARCH-007.1**: Implement proxy support in selenium search
+- [ ] **SEARCH-007.2**: Add proxy support to playwright search
+- [ ] **SEARCH-007.3**: Implement proxy support in brave API search
+- [ ] **SEARCH-007.4**: Add proxy support to Google CSE search
+- [ ] **SEARCH-007.5**: Test search modules with proxy configuration
+
+### SEARCH-008: Add user-agent customization
+
+- [ ] **SEARCH-008.1**: Implement user-agent customization in selenium search
+- [ ] **SEARCH-008.2**: Add user-agent customization to playwright search
+- [ ] **SEARCH-008.3**: Implement user-agent customization in brave API search
+- [ ] **SEARCH-008.4**: Add user-agent customization to Google CSE search
+- [ ] **SEARCH-008.5**: Test search modules with custom user-agent
+
+## LLM Integration
+
+### LLM-001: Update answer synthesizer
+
+- [ ] **LLM-001.1**: Modify answer synthesizer to accept configuration parameters
+- [ ] **LLM-001.2**: Update function signature while maintaining backward compatibility
+- [ ] **LLM-001.3**: Implement configuration parameter extraction
+- [ ] **LLM-001.4**: Update synthesis behavior based on configuration
+- [ ] **LLM-001.5**: Test answer synthesizer with configuration object
+
+### LLM-002: Update answer evaluator
+
+- [ ] **LLM-002.1**: Modify answer evaluator to accept configuration parameters
+- [ ] **LLM-002.2**: Update function signature while maintaining backward compatibility
+- [ ] **LLM-002.3**: Implement configuration parameter extraction
+- [ ] **LLM-002.4**: Add support for skipping evaluation based on configuration
+- [ ] **LLM-002.5**: Test answer evaluator with configuration object
+
+### LLM-003: Implement LLM provider selection
+
+- [ ] **LLM-003.1**: Create function to select LLM provider based on configuration
+- [ ] **LLM-003.2**: Implement provider-specific API calls
+- [ ] **LLM-003.3**: Add validation for provider names
+- [ ] **LLM-003.4**: Update answer synthesizer to use provider selection
+- [ ] **LLM-003.5**: Test LLM calls with different providers
+
+### LLM-004: Implement LLM model selection
+
+- [ ] **LLM-004.1**: Create function to select LLM model based on configuration
+- [ ] **LLM-004.2**: Implement model-specific parameters
+- [ ] **LLM-004.3**: Add validation for model names
+- [ ] **LLM-004.4**: Update answer synthesizer to use model selection
+- [ ] **LLM-004.5**: Test LLM calls with different models
+
+### LLM-005: Add temperature configuration
+
+- [ ] **LLM-005.1**: Implement temperature parameter in LLM calls
+- [ ] **LLM-005.2**: Add validation for temperature values
+- [ ] **LLM-005.3**: Update answer synthesizer to use temperature configuration
+- [ ] **LLM-005.4**: Test LLM calls with different temperature values
+
+### LLM-006: Add max tokens configuration
+
+- [ ] **LLM-006.1**: Implement max tokens parameter in LLM calls
+- [ ] **LLM-006.2**: Add validation for max tokens values
+- [ ] **LLM-006.3**: Update answer synthesizer to use max tokens configuration
+- [ ] **LLM-006.4**: Test LLM calls with different max tokens values
+
+### LLM-007: Implement retry mechanism
+
+- [ ] **LLM-007.1**: Create retry decorator for LLM API calls
+- [ ] **LLM-007.2**: Implement exponential backoff
+- [ ] **LLM-007.3**: Add error classification for retryable errors
+- [ ] **LLM-007.4**: Update LLM functions to use retry mechanism
+- [ ] **LLM-007.5**: Test retry mechanism with simulated failures
+
+### LLM-008: Add local LLM support
+
+- [ ] **LLM-008.1**: Research local LLM integration options
+- [ ] **LLM-008.2**: Implement local LLM provider
+- [ ] **LLM-008.3**: Add configuration options for local LLM
+- [ ] **LLM-008.4**: Create documentation for local LLM setup
+- [ ] **LLM-008.5**: Test local LLM integration
+
+## Output Handling
+
+### OUTPUT-001: Implement output path generation
+
+- [ ] **OUTPUT-001.1**: Create function to generate output directory paths
+- [ ] **OUTPUT-001.2**: Implement file name generation with timestamps
+- [ ] **OUTPUT-001.3**: Add support for project-based organization
+- [ ] **OUTPUT-001.4**: Implement directory creation
+- [ ] **OUTPUT-001.5**: Test output path generation with different configurations
+
+### OUTPUT-002: Add JSON output formatting
+
+- [ ] **OUTPUT-002.1**: Create function to format results as JSON
+- [ ] **OUTPUT-002.2**: Implement custom JSON serialization for special types
+- [ ] **OUTPUT-002.3**: Add pretty printing option
+- [ ] **OUTPUT-002.4**: Implement file writing with proper encoding
+- [ ] **OUTPUT-002.5**: Test JSON output with different result structures
+
+### OUTPUT-003: Implement console output formatting
+
+- [ ] **OUTPUT-003.1**: Create function to format results for console output
+- [ ] **OUTPUT-003.2**: Implement different verbosity levels
+- [ ] **OUTPUT-003.3**: Add color coding for different output types
+- [ ] **OUTPUT-003.4**: Implement progress indicators
+- [ ] **OUTPUT-003.5**: Test console output with different result structures
+
+### OUTPUT-004: Add support for saving raw HTML
+
+- [ ] **OUTPUT-004.1**: Implement option to save raw HTML of extracted pages
+- [ ] **OUTPUT-004.2**: Create directory structure for HTML files
+- [ ] **OUTPUT-004.3**: Add file naming convention for HTML files
+- [ ] **OUTPUT-004.4**: Implement HTML saving functionality
+- [ ] **OUTPUT-004.5**: Test HTML saving with different web pages
+
+### OUTPUT-005: Add support for extracting images
+
+- [ ] **OUTPUT-005.1**: Implement image extraction from web pages
+- [ ] **OUTPUT-005.2**: Create directory structure for images
+- [ ] **OUTPUT-005.3**: Add file naming convention for images
+- [ ] **OUTPUT-005.4**: Implement image saving functionality
+- [ ] **OUTPUT-005.5**: Test image extraction with different web pages
+
+### OUTPUT-006: Implement Markdown output
+
+- [ ] **OUTPUT-006.1**: Create function to format results as Markdown
+- [ ] **OUTPUT-006.2**: Implement Markdown templates for different result types
+- [ ] **OUTPUT-006.3**: Add support for including images in Markdown
+- [ ] **OUTPUT-006.4**: Implement file writing with proper encoding
+- [ ] **OUTPUT-006.5**: Test Markdown output with different result structures
+
+### OUTPUT-007: Add HTML output format
+
+- [ ] **OUTPUT-007.1**: Create function to format results as HTML
+- [ ] **OUTPUT-007.2**: Implement HTML templates for different result types
+- [ ] **OUTPUT-007.3**: Add support for including images in HTML
+- [ ] **OUTPUT-007.4**: Implement file writing with proper encoding
+- [ ] **OUTPUT-007.5**: Test HTML output with different result structures
+
+### OUTPUT-008: Create output summary file
+
+- [ ] **OUTPUT-008.1**: Design summary file format
+- [ ] **OUTPUT-008.2**: Implement summary generation function
+- [ ] **OUTPUT-008.3**: Add metadata to summary
+- [ ] **OUTPUT-008.4**: Implement file writing with proper encoding
+- [ ] **OUTPUT-008.5**: Test summary generation with different result structures
+
+## Testing
+
+### TEST-001: Create configuration unit tests
+
+- [ ] **TEST-001.1**: Set up test framework for configuration
+- [ ] **TEST-001.2**: Write tests for configuration creation
+- [ ] **TEST-001.3**: Implement tests for configuration validation
+- [ ] **TEST-001.4**: Add tests for environment variable loading
+- [ ] **TEST-001.5**: Write tests for configuration merging
+- [ ] **TEST-001.6**: Implement tests for edge cases
+
+### TEST-002: Create CLI argument tests
+
+- [ ] **TEST-002.1**: Set up test framework for CLI arguments
+- [ ] **TEST-002.2**: Write tests for core arguments
+- [ ] **TEST-002.3**: Implement tests for search configuration arguments
+- [ ] **TEST-002.4**: Add tests for LLM configuration arguments
+- [ ] **TEST-002.5**: Write tests for advanced options
+- [ ] **TEST-002.6**: Implement tests for argument validation
+
+### TEST-003: Implement integration tests
+
+- [ ] **TEST-003.1**: Set up integration test framework
+- [ ] **TEST-003.2**: Write tests for configuration and CLI integration
+- [ ] **TEST-003.3**: Implement tests for search and output integration
+- [ ] **TEST-003.4**: Add tests for LLM and evaluation integration
+- [ ] **TEST-003.5**: Write tests for end-to-end workflow
+- [ ] **TEST-003.6**: Implement tests for error handling
+
+### TEST-004: Add configuration file tests
+
+- [ ] **TEST-004.1**: Set up test framework for configuration files
+- [ ] **TEST-004.2**: Write tests for YAML file loading
+- [ ] **TEST-004.3**: Implement tests for configuration file validation
+- [ ] **TEST-004.4**: Add tests for configuration file merging
+- [ ] **TEST-004.5**: Write tests for configuration file serialization
+
+### TEST-005: Create search module tests
+
+- [ ] **TEST-005.1**: Set up test framework for search modules
+- [ ] **TEST-005.2**: Write tests for selenium search with configuration
+- [ ] **TEST-005.3**: Implement tests for playwright search with configuration
+- [ ] **TEST-005.4**: Add tests for brave API search with configuration
+- [ ] **TEST-005.5**: Write tests for Google CSE search with configuration
+- [ ] **TEST-005.6**: Implement tests for search provider selection
+
+### TEST-006: Add LLM integration tests
+
+- [ ] **TEST-006.1**: Set up test framework for LLM integration
+- [ ] **TEST-006.2**: Write tests for answer synthesizer with configuration
+- [ ] **TEST-006.3**: Implement tests for answer evaluator with configuration
+- [ ] **TEST-006.4**: Add tests for LLM provider selection
+- [ ] **TEST-006.5**: Write tests for LLM model selection
+- [ ] **TEST-006.6**: Implement tests for temperature and max tokens configuration
+
+### TEST-007: Implement output tests
+
+- [ ] **TEST-007.1**: Set up test framework for output handling
+- [ ] **TEST-007.2**: Write tests for output path generation
+- [ ] **TEST-007.3**: Implement tests for JSON output formatting
+- [ ] **TEST-007.4**: Add tests for console output formatting
+- [ ] **TEST-007.5**: Write tests for HTML and Markdown output
+- [ ] **TEST-007.6**: Implement tests for image extraction
+
+### TEST-008: Create end-to-end tests
+
+- [ ] **TEST-008.1**: Set up end-to-end test framework
+- [ ] **TEST-008.2**: Write tests for basic search and answer generation
+- [ ] **TEST-008.3**: Implement tests for different search providers
+- [ ] **TEST-008.4**: Add tests for different LLM configurations
+- [ ] **TEST-008.5**: Write tests for different output formats
+- [ ] **TEST-008.6**: Implement tests for error scenarios
+
+## Documentation
+
+### DOC-001: Update README.md
+
+- [ ] **DOC-001.1**: Add CLI usage information to README.md
+- [ ] **DOC-001.2**: Update installation instructions
+- [ ] **DOC-001.3**: Add basic usage examples
+- [ ] **DOC-001.4**: Update project description
+- [ ] **DOC-001.5**: Add links to detailed documentation
+
+### DOC-002: Create CLI documentation
+
+- [ ] **DOC-002.1**: Create CLI documentation file
+- [ ] **DOC-002.2**: Document all CLI options with descriptions
+- [ ] **DOC-002.3**: Add examples for common use cases
+- [ ] **DOC-002.4**: Document option groups and their purpose
+- [ ] **DOC-002.5**: Add troubleshooting information
+
+### DOC-003: Document configuration file format
+
+- [ ] **DOC-003.1**: Create configuration file documentation
+- [ ] **DOC-003.2**: Document all configuration options
+- [ ] **DOC-003.3**: Add examples for common configurations
+- [ ] **DOC-003.4**: Document configuration file structure
+- [ ] **DOC-003.5**: Add validation rules and constraints
+
+### DOC-004: Add usage examples
+
+- [ ] **DOC-004.1**: Create usage examples document
+- [ ] **DOC-004.2**: Add examples for basic search
+- [ ] **DOC-004.3**: Document examples for different search providers
+- [ ] **DOC-004.4**: Add examples for different LLM configurations
+- [ ] **DOC-004.5**: Document examples for different output formats
+
+### DOC-005: Create troubleshooting guide
+
+- [ ] **DOC-005.1**: Create troubleshooting guide
+- [ ] **DOC-005.2**: Document common error messages and solutions
+- [ ] **DOC-005.3**: Add troubleshooting for search issues
+- [ ] **DOC-005.4**: Document troubleshooting for LLM issues
+- [ ] **DOC-005.5**: Add troubleshooting for configuration issues
+
+### DOC-006: Document environment variables
+
+- [ ] **DOC-006.1**: Create environment variables documentation
+- [ ] **DOC-006.2**: Document all environment variables
+- [ ] **DOC-006.3**: Add examples for environment variable usage
+- [ ] **DOC-006.4**: Document environment variable precedence
+- [ ] **DOC-006.5**: Add information about .env file support
+
+### DOC-007: Add API documentation
+
+- [ ] **DOC-007.1**: Create API documentation
+- [ ] **DOC-007.2**: Document all public functions and classes
+- [ ] **DOC-007.3**: Add examples for API usage
+- [ ] **DOC-007.4**: Document function parameters and return values
+- [ ] **DOC-007.5**: Add type information and constraints
+
+### DOC-008: Create developer guide
+
+- [ ] **DOC-008.1**: Create developer guide
+- [ ] **DOC-008.2**: Document project structure
+- [ ] **DOC-008.3**: Add information about extending the system
+- [ ] **DOC-008.4**: Document coding standards and practices
+- [ ] **DOC-008.5**: Add information about testing and contributing

@@ -304,7 +304,12 @@ async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3)
         )
         
         # Convert to dictionary for JSON serialization
-        return final_output.model_dump()
+        result_dict = final_output.model_dump()
+        
+        # Add extracted contents to the result for debugging and analysis
+        result_dict["extracted_contents"] = filtered_contents
+        
+        return result_dict
         
     except Exception as e:
         logger.error(f"Error creating structured output: {e}")
@@ -338,18 +343,3 @@ def generate_answer_cli(
         raise typer.Exit(1)
 
 
-@app.command("generate-answer")
-def generate_answer_cli(
-    query: str = typer.Argument(..., help="The query for which to generate an answer."),
-    num_links: int = typer.Option(3, "--num-links", "-n", help="Number of top search results to parse for content.")
-):
-    """
-    Generates a synthesized answer to a query by parsing top search results and using an LLM.
-    """
-    try:
-        result = asyncio.run(orchestrate_answer_generation(query, num_links))
-        import json
-        typer.echo(json.dumps(result, indent=2))
-    except Exception as e:
-        typer.echo(f"Error: {e}", err=True)
-        raise typer.Exit(1)
