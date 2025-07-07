@@ -5,7 +5,7 @@ import logging
 from typing import List, Dict, Any, Optional
 
 import spacy
-from openai.types.error import APIError, RateLimitError, APIConnectionError, AuthenticationError
+from openai import APIError, RateLimitError, APIConnectionError, AuthenticationError
 
 from search_agent.core.exceptions import SearchAgentError
 from search_agent.config import settings

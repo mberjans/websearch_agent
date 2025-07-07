@@ -4,7 +4,7 @@ import logging
 import time
 from typing import List, Optional
 
-from openai.types.error import APIError, RateLimitError, APIConnectionError, AuthenticationError
+from openai import APIError, RateLimitError, APIConnectionError, AuthenticationError
 
 from search_agent.core.exceptions import SearchAgentError
 from search_agent.config import settings
