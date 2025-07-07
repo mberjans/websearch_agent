@@ -21,30 +21,30 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 
 ### CORE-002: Create Configuration class
 
-- [ ] **CORE-002.1**: Create a new `Configuration` class in `config.py` using Pydantic
-- [ ] **CORE-002.2**: Define nested configuration classes for search, LLM, output, and advanced options
-- [ ] **CORE-002.3**: Set default values for all configuration parameters
-- [ ] **CORE-002.4**: Add type hints and docstrings for all properties
-- [ ] **CORE-002.5**: Implement basic initialization from dictionary
-- [ ] **CORE-002.6**: Add utility methods for configuration manipulation
-- [ ] **CORE-002.7**: Test basic configuration creation and access
+- [x] **CORE-002.1**: Create a new `Configuration` class in `config.py` using Pydantic
+- [x] **CORE-002.2**: Define nested configuration classes for search, LLM, output, and advanced options
+- [x] **CORE-002.3**: Set default values for all configuration parameters
+- [x] **CORE-002.4**: Add type hints and docstrings for all properties
+- [x] **CORE-002.5**: Implement basic initialization from dictionary
+- [x] **CORE-002.6**: Add utility methods for configuration manipulation
+- [x] **CORE-002.7**: Test basic configuration creation and access
 
 ### CORE-003: Implement configuration loading from environment
 
-- [ ] **CORE-003.1**: Create a `from_env` class method in the `Configuration` class
-- [ ] **CORE-003.2**: Map environment variables to configuration properties
-- [ ] **CORE-003.3**: Handle type conversion for different property types
-- [ ] **CORE-003.4**: Implement fallback to default values
-- [ ] **CORE-003.5**: Add error handling for invalid environment values
-- [ ] **CORE-003.6**: Test loading configuration from environment variables
+- [x] **CORE-003.1**: Create a `from_env` class method in the `Configuration` class
+- [x] **CORE-003.2**: Map environment variables to configuration properties
+- [x] **CORE-003.3**: Handle type conversion for different property types
+- [x] **CORE-003.4**: Implement fallback to default values
+- [x] **CORE-003.5**: Add error handling for invalid environment values
+- [x] **CORE-003.6**: Test loading configuration from environment variables
 
 ### CORE-004: Implement configuration validation
 
-- [ ] **CORE-004.1**: Add validators for critical configuration properties
-- [ ] **CORE-004.2**: Implement cross-field validation where needed
-- [ ] **CORE-004.3**: Add custom error messages for validation failures
-- [ ] **CORE-004.4**: Ensure validation runs on configuration creation
-- [ ] **CORE-004.5**: Test validation with valid and invalid configurations
+- [x] **CORE-004.1**: Add validators for critical configuration properties
+- [x] **CORE-004.2**: Implement cross-field validation where needed
+- [x] **CORE-004.3**: Add custom error messages for validation failures
+- [x] **CORE-004.4**: Ensure validation runs on configuration creation
+- [x] **CORE-004.5**: Test validation with valid and invalid configurations
 
 ### CORE-005: Create main CLI script
 
@@ -67,11 +67,11 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 
 ### CORE-007: Add PyYAML dependency
 
-- [ ] **CORE-007.1**: Add PyYAML to requirements.txt
-- [ ] **CORE-007.2**: Update setup.py if present
-- [ ] **CORE-007.3**: Test installation with the new dependency
-- [ ] **CORE-007.4**: Add version constraint if needed
-- [ ] **CORE-007.5**: Document the new dependency
+- [x] **CORE-007.1**: Add PyYAML to requirements.txt
+- [x] **CORE-007.2**: Update setup.py if present
+- [x] **CORE-007.3**: Test installation with the new dependency
+- [x] **CORE-007.4**: Add version constraint if needed
+- [x] **CORE-007.5**: Document the new dependency
 
 ### CORE-008: Create directory structure for outputs
 
