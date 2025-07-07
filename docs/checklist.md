@@ -48,13 +48,13 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 
 ### CORE-005: Create main CLI script
 
-- [ ] **CORE-005.1**: Create `websearch_agent.py` in the project root
-- [ ] **CORE-005.2**: Set up the Typer app instance
-- [ ] **CORE-005.3**: Create the main command function structure
-- [ ] **CORE-005.4**: Implement basic argument parsing
-- [ ] **CORE-005.5**: Add entry point for running the script directly
-- [ ] **CORE-005.6**: Test basic script execution
-- [ ] **CORE-005.7**: Add shebang and make the script executable
+- [x] **CORE-005.1**: Create `websearch_agent.py` in the project root
+- [x] **CORE-005.2**: Set up the Typer app instance
+- [x] **CORE-005.3**: Create the main command function structure
+- [x] **CORE-005.4**: Implement basic argument parsing
+- [x] **CORE-005.5**: Add entry point for running the script directly
+- [x] **CORE-005.6**: Test basic script execution
+- [x] **CORE-005.7**: Add shebang and make the script executable
 
 ### CORE-006: Implement backward compatibility
 
