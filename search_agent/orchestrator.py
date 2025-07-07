@@ -9,10 +9,13 @@ import asyncio
 import importlib
 import logging
 from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, TYPE_CHECKING
 from urllib.parse import urlparse
 
 import typer
+
+if TYPE_CHECKING:
+    from search_agent.config import Configuration
 from search_agent.core.models import SearchModuleOutput, SearchResult
 from search_agent.core.exceptions import ScrapingError, NoResultsError
 
@@ -24,12 +27,13 @@ logger = logging.getLogger(__name__)
 app = typer.Typer()
 
 
-async def run_orchestration(query: str) -> SearchModuleOutput:
+async def run_orchestration(query: str, config: Optional['Configuration'] = None) -> SearchModuleOutput:
     """
     Orchestrates the concurrent execution of multiple search modules.
     
     Args:
         query: The search query to execute across all modules
+        config: Optional configuration object for search parameters
         
     Returns:
         A SearchModuleOutput containing merged and ranked results from all modules
@@ -44,6 +48,11 @@ async def run_orchestration(query: str) -> SearchModuleOutput:
         # 'scrapy_search'
     ]
     
+    # Filter modules based on configuration if provided
+    if config and hasattr(config, 'search') and config.search.provider != "all":
+        selected_providers = [p.strip() for p in config.search.provider.split(',')]
+        available_modules = [m for m in available_modules if any(p in m for p in selected_providers)]
+    
     # Create list of awaitable tasks
     tasks = []
     
@@ -56,11 +65,11 @@ async def run_orchestration(query: str) -> SearchModuleOutput:
             # Check if it's an async function
             import inspect
             if inspect.iscoroutinefunction(search_function):
-                # Add async function directly
-                tasks.append(search_function(query))
+                # Add async function directly with config
+                tasks.append(search_function(query, config))
             else:
                 # Wrap synchronous function with asyncio.to_thread
-                tasks.append(asyncio.to_thread(search_function, query))
+                tasks.append(asyncio.to_thread(search_function, query, config))
                 
         except (ImportError, AttributeError) as e:
             logger.warning(f"Could not load module '{module_name}': {e}")

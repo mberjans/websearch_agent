@@ -2,12 +2,15 @@ import asyncio
 import logging
 import re
 from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional, Tuple, TYPE_CHECKING
 from urllib.parse import urlparse
 
 import time
 import typer
 from pydantic import HttpUrl
+
+if TYPE_CHECKING:
+    from search_agent.config import Configuration
 
 from search_agent.core.models import SearchModuleOutput, SearchResult, SynthesizedAnswer, AnswerEvaluationResult, FinalAnswerOutput
 from search_agent.core.exceptions import SearchAgentError, ScrapingError
@@ -78,7 +81,7 @@ def is_low_quality_content(content: str) -> Tuple[bool, str]:
     return False, ""
 
 
-async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3) -> Dict[str, Any]:
+async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3, config: Optional['Configuration'] = None) -> Dict[str, Any]:
     """
     Orchestrates the process of generating a synthesized answer from search results.
     
@@ -113,7 +116,7 @@ async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3)
         # 1. Get initial search results from the existing search orchestrator
         logger.info(f"Initiating search for query: '{query}'")
         search_start_time = time.perf_counter()
-        search_output: SearchModuleOutput = await run_search_orchestration(query)
+        search_output: SearchModuleOutput = await run_search_orchestration(query, config)
         search_end_time = time.perf_counter()
         metadata["search_execution_time"] = search_end_time - search_start_time
         
@@ -220,7 +223,7 @@ async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3)
         # 4. Call answer_synthesizer.synthesize_answer
         logger.info("Synthesizing answer using LLM...")
         synthesis_start_time = time.perf_counter()
-        synthesized_answer = await synthesize_answer(query, filtered_contents)
+        synthesized_answer = await synthesize_answer(query, filtered_contents, config=config)
         synthesis_end_time = time.perf_counter()
         metadata["answer_synthesis_time"] = synthesis_end_time - synthesis_start_time
         
@@ -238,7 +241,7 @@ async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3)
         # 5. Call answer_evaluator.evaluate_answer_quality
         logger.info("Evaluating synthesized answer quality...")
         evaluation_start_time = time.perf_counter()
-        evaluation_results = await evaluate_answer_quality(query, synthesized_answer, filtered_contents)
+        evaluation_results = await evaluate_answer_quality(query, synthesized_answer, filtered_contents, config=config)
         evaluation_end_time = time.perf_counter()
         metadata["answer_evaluation_time"] = evaluation_end_time - evaluation_start_time
         logger.info("Answer evaluation completed.")

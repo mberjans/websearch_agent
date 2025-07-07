@@ -2,9 +2,12 @@
 import asyncio
 import logging
 import time
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 
 from openai import APIError, RateLimitError, APIConnectionError, AuthenticationError
+
+if TYPE_CHECKING:
+    from search_agent.config import Configuration
 
 from search_agent.core.exceptions import SearchAgentError
 from search_agent.config import settings
@@ -13,7 +16,7 @@ from search_agent.utils import get_llm_client, get_model_name
 # Configure logging
 logger = logging.getLogger(__name__)
 
-async def synthesize_answer(query: str, content_snippets: List[str], max_retries: int = 3) -> Optional[str]:
+async def synthesize_answer(query: str, content_snippets: List[str], max_retries: int = 3, config: Optional['Configuration'] = None) -> Optional[str]:
     """
     Synthesizes an answer to the query using an LLM based on provided content snippets.
     
@@ -21,6 +24,7 @@ async def synthesize_answer(query: str, content_snippets: List[str], max_retries
         query: The user's query to answer
         content_snippets: List of text snippets from web pages to use as source material
         max_retries: Maximum number of retry attempts for transient errors
+        config: Optional configuration object for LLM parameters
         
     Returns:
         Synthesized answer as a string, or None if synthesis fails after retries
@@ -31,8 +35,11 @@ async def synthesize_answer(query: str, content_snippets: List[str], max_retries
     try:
         # Get the appropriate LLM client based on configuration
         client = get_llm_client()
-        # Get the model name to use
-        model = get_model_name(settings.LLM_SYNTHESIZER_MODEL)
+        # Get the model name to use - prefer config over environment
+        if config and hasattr(config, 'llm') and config.llm.model:
+            model = get_model_name(config.llm.model)
+        else:
+            model = get_model_name(settings.LLM_SYNTHESIZER_MODEL)
     except SearchAgentError as e:
         raise SearchAgentError(f"Failed to configure LLM client for answer synthesis: {e}")
 
@@ -55,10 +62,22 @@ Based on the query and the provided snippets, please synthesize a direct, concis
 
 Synthesized Answer:"""
 
-    # Initialize retry parameters
+    # Initialize retry parameters - prefer config over defaults
+    if config and hasattr(config, 'advanced') and config.advanced.retry_count:
+        max_retries = config.advanced.retry_count
+    
     retry_count = 0
     base_delay = 1  # Start with a 1-second delay
     max_delay = 16  # Maximum delay between retries
+
+    # Get LLM parameters from config or use defaults
+    temperature = 0.2
+    max_tokens = 500
+    if config and hasattr(config, 'llm'):
+        if config.llm.temperature is not None:
+            temperature = config.llm.temperature
+        if config.llm.max_tokens is not None:
+            max_tokens = config.llm.max_tokens
 
     while retry_count <= max_retries:
         try:
@@ -67,8 +86,8 @@ Synthesized Answer:"""
                 messages=[
                     {"role": "user", "content": prompt}
                 ],
-                max_tokens=500, # Limit answer length
-                temperature=0.2, # Keep it factual and less creative
+                max_tokens=max_tokens,
+                temperature=temperature,
             )
             
             answer = response.choices[0].message.content.strip()

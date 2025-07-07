@@ -6,10 +6,13 @@ to scrape search results from DuckDuckGo in a headless browser environment.
 
 import time
 from datetime import datetime, timezone
-from typing import List
+from typing import List, Optional, TYPE_CHECKING
 
 import typer
 from selenium import webdriver
+
+if TYPE_CHECKING:
+    from search_agent.config import Configuration
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -24,10 +27,17 @@ from search_agent.core.exceptions import ScrapingError, NoResultsError
 app = typer.Typer()
 
 
-def search(query: str) -> SearchModuleOutput:
+def search(query: str, config: Optional['Configuration'] = None) -> SearchModuleOutput:
     """
     The core library function that performs the search.
     This function contains the main logic and is what other parts of the system will import and call.
+    
+    Args:
+        query: The search query to execute
+        config: Optional configuration object for search parameters
+        
+    Returns:
+        SearchModuleOutput containing search results
     """
     start_time = time.perf_counter()
     
