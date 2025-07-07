@@ -11,6 +11,7 @@ from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field, validator
 from pydantic import HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import warnings
 
 
 class Settings(BaseSettings):
@@ -114,6 +115,11 @@ class Configuration(BaseModel):
         Returns:
             Configuration instance loaded from environment variables
         """
+        warnings.warn(
+            "Loading configuration from environment variables is deprecated and will be removed in a future version. Please use configuration files or CLI arguments instead.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         return cls(
             query=query,
             search=SearchConfig(
@@ -165,11 +171,11 @@ class Configuration(BaseModel):
             ValueError: If the configuration data is invalid
         """
         try:
-            config_path = Path(config_path)
-            if not config_path.exists():
+            config_path_obj = Path(config_path)
+            if not config_path_obj.exists():
                 raise FileNotFoundError(f"Configuration file not found: {config_path}")
             
-            with open(config_path, 'r', encoding='utf-8') as f:
+            with open(config_path_obj, 'r', encoding='utf-8') as f:
                 config_data = yaml.safe_load(f)
             
             if config_data is None:
