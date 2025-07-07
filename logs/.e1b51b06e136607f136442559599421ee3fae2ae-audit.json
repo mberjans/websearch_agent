@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/Mark/Research/Clinical_Metabolomics_Oracle/websearch_agent/logs/.e1b51b06e136607f136442559599421ee3fae2ae-audit.json",
+    "files": [
+        {
+            "date": 1751798580216,
+            "name": "/Users/Mark/Research/Clinical_Metabolomics_Oracle/websearch_agent/logs/mcp-puppeteer-2025-07-06.log",
+            "hash": "6f42cc329f996f294735f87fac3cc5612b5ac2e8119b126ba19eb0fdac882c4f"
+        }
+    ],
+    "hashType": "sha256"
+}

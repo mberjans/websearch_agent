@@ -41,7 +41,7 @@ async def run_orchestration(query: str) -> SearchModuleOutput:
         'brave_api_search',
         'google_cse_search',
         'httpx_search',
-        'scrapy_search'
+        # 'scrapy_search'
     ]
     
     # Create list of awaitable tasks

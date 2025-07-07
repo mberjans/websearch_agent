@@ -1,3 +1,6 @@
+[tool.poetry]
+packages = [{include = "search_agent"}]
+
 [project]
 name = "websearch-agent"
 version = "0.1.0"
@@ -6,7 +9,7 @@ authors = [
     {name = "Mark Berjanskii",email = "mb1@ualberta.ca"}
 ]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.13"
 dependencies = [
     "pydantic (>=2.11.7,<3.0.0)",
     "pydantic-settings (>=2.10.1,<3.0.0)",

@@ -29,7 +29,9 @@ A sophisticated, modular, and extensible web search agent system that aggregates
 For API-based modules, you'll need:
 - **Brave Search API**: Get your key from [Brave Search API](https://brave.com/search/api/)
 - **Google Custom Search**: Get API key and CSE ID from [Google Developers Console](https://developers.google.com/custom-search)
-- **OpenAI API**: For LLM-based quality evaluation from [OpenAI](https://platform.openai.com/)
+- **LLM API Access** (choose one):
+  - **OpenRouter API** (recommended): Get your key from [OpenRouter](https://openrouter.ai/)
+  - **OpenAI API**: For direct access from [OpenAI](https://platform.openai.com/)
 
 ## 🛠️ Installation
 
@@ -62,17 +64,32 @@ python -m spacy download en_core_web_md
 ### 5. Configure Environment Variables (Optional)
 Create a `.env` file in the project root:
 ```bash
-# API Keys (optional - modules will be skipped if not provided)
+# Search API Keys (optional - modules will be skipped if not provided)
 BRAVE_API_KEY=your_brave_api_key_here
 GOOGLE_API_KEY=your_google_api_key_here
 GOOGLE_CSE_ID=your_google_cse_id_here
-OPENAI_API_KEY=your_openai_api_key_here
+
+# LLM API Keys - You can use either OpenAI directly or OpenRouter
+# If both are provided, OpenRouter will be used by default
+
+# OpenAI API Key (direct usage)
+# OPENAI_API_KEY=your_openai_api_key_here
+
+# OpenRouter API Key (recommended)
+OPENROUTER_API_KEY=your_openrouter_api_key_here
 
 # Database Configuration
 EVALUATION_DB_PATH=evaluation_log.db
 
 # LLM Configuration
 LLM_EVALUATOR_MODEL=gpt-4o-mini
+LLM_SYNTHESIZER_MODEL=gpt-4o-mini
+
+# Set to false to use OpenAI directly instead of OpenRouter
+USE_OPENROUTER=true
+
+# OpenRouter Configuration
+OPENROUTER_REFERER=https://websearch-agent.example.com
 ```
 
 ## 🚀 Quick Start
@@ -219,9 +236,16 @@ class SearchModuleOutput(BaseModel):
 | `BRAVE_API_KEY` | Brave Search API key | No | None |
 | `GOOGLE_API_KEY` | Google API key | No | None |
 | `GOOGLE_CSE_ID` | Google Custom Search Engine ID | No | None |
-| `OPENAI_API_KEY` | OpenAI API key for LLM evaluation | No | None |
+| `OPENROUTER_API_KEY` | OpenRouter API key (recommended) | No* | None |
+| `OPENAI_API_KEY` | OpenAI API key (alternative to OpenRouter) | No* | None |
+| `USE_OPENROUTER` | Whether to use OpenRouter instead of OpenAI directly | No | `true` |
+| `OPENROUTER_BASE_URL` | OpenRouter API base URL | No | `https://openrouter.ai/api/v1` |
+| `OPENROUTER_REFERER` | HTTP referer for OpenRouter API | No | `https://websearch-agent.example.com` |
 | `EVALUATION_DB_PATH` | SQLite database path | No | `evaluation_log.db` |
-| `LLM_EVALUATOR_MODEL` | OpenAI model for evaluation | No | `gpt-4o-mini` |
+| `LLM_EVALUATOR_MODEL` | LLM model for evaluation | No | `gpt-4o-mini` |
+| `LLM_SYNTHESIZER_MODEL` | LLM model for answer synthesis | No | `gpt-4o-mini` |
+
+\* Either `OPENROUTER_API_KEY` or `OPENAI_API_KEY` is required for LLM-based features
 
 ### Module Configuration
 Each module can be configured independently:

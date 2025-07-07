@@ -35,7 +35,7 @@ async def search(query: str) -> SearchModuleOutput:
             
             await page.goto(f"https://duckduckgo.com/?q={query}&t=h_&ia=web")
             
-            await page.wait_for_selector("[data-testid='result']", timeout=10000)
+            await page.wait_for_selector("[data-testid='result']", timeout=30000)
             
             result_elements = await (await page.locator("[data-testid='result']")).all()
             

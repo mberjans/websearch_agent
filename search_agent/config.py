@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     GOOGLE_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
     ANTHROPIC_API_KEY: Optional[str] = None
+    OPENROUTER_API_KEY: Optional[str] = None
     
     # Google Custom Search Engine
     GOOGLE_CSE_ID: Optional[str] = None
@@ -29,7 +30,12 @@ class Settings(BaseSettings):
     
     # LLM Configuration
     LLM_EVALUATOR_MODEL: str = "gpt-4o-mini"
-    LLM_EVALUATOR_ENDPOINT: Optional[HttpUrl] = None
+    LLM_SYNTHESIZER_MODEL: str = "gpt-4o-mini"
+    
+    # OpenRouter Configuration
+    USE_OPENROUTER: bool = True
+    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
+    OPENROUTER_REFERER: str = "https://websearch-agent.example.com"
     
     model_config = SettingsConfigDict(
         env_file='.env',

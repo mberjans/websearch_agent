@@ -5,7 +5,7 @@ to ensure consistent JSON I/O and type safety.
 """
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field, HttpUrl
 
 
@@ -42,3 +42,15 @@ class AnswerEvaluationResult(BaseModel):
     completeness_score: float = Field(..., description="Score indicating how complete the answer is based on available content (0-1).")
     conciseness_score: float = Field(..., description="Score indicating the conciseness of the answer (0-1).")
     llm_feedback: Optional[str] = Field(None, description="Optional textual feedback from the LLM evaluator.")
+    nlp_relevance_score: Optional[float] = Field(None, description="Optional NLP-based relevance score using cosine similarity.")
+
+
+class FinalAnswerOutput(BaseModel):
+    """Represents the complete output of the answer generation process."""
+    query: str = Field(..., description="The original query that was answered.")
+    synthesized_answer: SynthesizedAnswer = Field(..., description="The synthesized answer to the query.")
+    evaluation_results: AnswerEvaluationResult = Field(..., description="Evaluation metrics for the synthesized answer.")
+    source_urls: List[HttpUrl] = Field(..., description="List of URLs from which content was extracted.")
+    timestamp_utc: datetime = Field(..., description="The UTC timestamp of when the answer was generated.")
+    execution_time_seconds: float = Field(..., description="The total execution time for the entire answer generation process.")
+    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata about the answer generation process.")
