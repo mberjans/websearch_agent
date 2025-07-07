@@ -92,7 +92,7 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 - [x] **CLI-001.4**: Implement `project-name` option
 - [x] **CLI-001.5**: Add help text for all arguments
 - [x] **CLI-001.6**: Test argument parsing
-- [ ] **CLI-001.7**: Implement validation for core arguments
+- [x] **CLI-001.7**: Implement validation for core arguments
 
 ### CLI-002: Implement search configuration arguments
 

@@ -26,6 +26,55 @@ app = typer.Typer(
 )
 
 
+def validate_query(query: str) -> None:
+    """Validate the search query."""
+    if not query or not query.strip():
+        raise typer.BadParameter("Query cannot be empty")
+    
+    if len(query.strip()) < 3:
+        raise typer.BadParameter("Query must be at least 3 characters long")
+    
+    if len(query.strip()) > 500:
+        raise typer.BadParameter("Query must be less than 500 characters")
+
+
+def validate_output_dir(output_dir: Optional[str]) -> None:
+    """Validate the output directory."""
+    if output_dir:
+        # Check if the directory is writable
+        try:
+            Path(output_dir).mkdir(parents=True, exist_ok=True)
+            test_file = Path(output_dir) / ".test_write"
+            test_file.touch()
+            test_file.unlink()
+        except (OSError, PermissionError) as e:
+            raise typer.BadParameter(f"Output directory '{output_dir}' is not writable: {e}")
+
+
+def validate_project_name(project_name: Optional[str]) -> None:
+    """Validate the project name."""
+    if project_name:
+        # Check for valid characters (alphanumeric, underscore, hyphen)
+        import re
+        if not re.match(r'^[a-zA-Z0-9_-]+$', project_name):
+            raise typer.BadParameter("Project name can only contain letters, numbers, underscores, and hyphens")
+        
+        if len(project_name) > 50:
+            raise typer.BadParameter("Project name must be less than 50 characters")
+
+
+def validate_output_file(output_file: Optional[str]) -> None:
+    """Validate the output file name."""
+    if output_file:
+        # Check for valid characters
+        import re
+        if not re.match(r'^[a-zA-Z0-9_-]+$', output_file):
+            raise typer.BadParameter("Output file name can only contain letters, numbers, underscores, and hyphens")
+        
+        if len(output_file) > 100:
+            raise typer.BadParameter("Output file name must be less than 100 characters")
+
+
 def setup_logging(verbose: bool = False, quiet: bool = False, debug: bool = False) -> None:
     """Configure logging based on verbosity level."""
     if quiet:
@@ -115,6 +164,12 @@ def search(
     This command searches multiple sources, extracts content, and uses LLM to generate
     a comprehensive answer to your query.
     """
+    
+    # Validate core arguments
+    validate_query(query)
+    validate_output_dir(output_dir)
+    validate_project_name(project_name)
+    validate_output_file(output_file)
     
     # Set up logging first
     setup_logging(verbose=verbose, quiet=quiet, debug=debug)
