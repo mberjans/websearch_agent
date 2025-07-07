@@ -2,6 +2,595 @@
 
 This document provides detailed API reference for the Modular Web Search Agent System.
 
+## Module Usage
+
+The websearch agent can be imported and used as a module in other Python scripts. This section provides comprehensive examples and best practices for integrating the agent into your applications.
+
+### Basic Module Usage
+
+#### Simple Question Answering
+
+```python
+import asyncio
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+from search_agent.answer_orchestrator import orchestrate_answer_generation
+
+async def get_answer(question: str):
+    """Get a comprehensive answer to a question using web search."""
+    
+    # Create configuration
+    config = Configuration(
+        query=question,
+        search=SearchConfig(
+            provider="selenium",  # Use only Selenium for speed
+            max_results=10,
+            max_urls=3
+        ),
+        llm=LLMConfig(
+            provider="openrouter",
+            model="openrouter/cypher-alpha:free"
+        )
+    )
+    
+    # Run the search and answer generation
+    result = await orchestrate_answer_generation(
+        query=config.query,
+        num_links_to_parse=config.search.max_urls,
+        config=config
+    )
+    
+    return result
+
+# Usage
+async def main():
+    result = await get_answer("What is machine learning?")
+    print(f"Answer: {result['synthesized_answer']['answer']}")
+    print(f"Sources: {result['source_urls']}")
+    print(f"Execution time: {result['execution_time_seconds']:.2f}s")
+
+# Run the async function
+asyncio.run(main())
+```
+
+#### Synchronous Wrapper
+
+```python
+import asyncio
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+from search_agent.answer_orchestrator import orchestrate_answer_generation
+
+def get_answer_sync(question: str, max_sources: int = 3):
+    """Synchronous wrapper for getting answers."""
+    
+    config = Configuration(
+        query=question,
+        search=SearchConfig(
+            provider="selenium",
+            max_results=10,
+            max_urls=max_sources
+        ),
+        llm=LLMConfig(
+            provider="openrouter",
+            model="openrouter/cypher-alpha:free"
+        )
+    )
+    
+    return asyncio.run(orchestrate_answer_generation(
+        query=config.query,
+        num_links_to_parse=config.search.max_urls,
+        config=config
+    ))
+
+# Usage
+result = get_answer_sync("What is climate change?")
+print(result['synthesized_answer']['answer'])
+```
+
+### Advanced Configuration
+
+#### Multiple Search Providers
+
+```python
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+
+# Use multiple providers for comprehensive results
+config = Configuration(
+    query="What is artificial intelligence?",
+    search=SearchConfig(
+        provider="selenium,brave",  # Use Selenium and Brave API
+        max_results=15,
+        max_urls=5,
+        timeout=45
+    ),
+    llm=LLMConfig(
+        provider="openrouter",
+        model="openrouter/cypher-alpha:free",
+        temperature=0.1,
+        max_tokens=1024
+    )
+)
+```
+
+#### Custom LLM Configuration
+
+```python
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+
+# Use different LLM providers
+config = Configuration(
+    query="Explain quantum computing",
+    search=SearchConfig(provider="all"),  # Use all available providers
+    llm=LLMConfig(
+        provider="openai",  # Use OpenAI instead of OpenRouter
+        model="gpt-4o-mini",
+        temperature=0.0,  # More deterministic
+        max_tokens=2048,  # Longer responses
+        evaluation=True  # Enable quality evaluation
+    )
+)
+```
+
+### Batch Processing
+
+#### Process Multiple Questions
+
+```python
+import asyncio
+from typing import List, Dict, Any
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+from search_agent.answer_orchestrator import orchestrate_answer_generation
+
+async def process_questions(questions: List[str]) -> List[Dict[str, Any]]:
+    """Process multiple questions and return results."""
+    
+    results = []
+    
+    for question in questions:
+        try:
+            config = Configuration(
+                query=question,
+                search=SearchConfig(
+                    provider="selenium",
+                    max_results=10,
+                    max_urls=3
+                ),
+                llm=LLMConfig(
+                    provider="openrouter",
+                    model="openrouter/cypher-alpha:free"
+                )
+            )
+            
+            result = await orchestrate_answer_generation(
+                query=config.query,
+                num_links_to_parse=config.search.max_urls,
+                config=config
+            )
+            
+            results.append({
+                'question': question,
+                'answer': result['synthesized_answer']['answer'],
+                'sources': result['source_urls'],
+                'execution_time': result['execution_time_seconds'],
+                'quality_scores': result.get('evaluation_results', {})
+            })
+            
+        except Exception as e:
+            results.append({
+                'question': question,
+                'error': str(e),
+                'answer': None,
+                'sources': [],
+                'execution_time': 0,
+                'quality_scores': {}
+            })
+    
+    return results
+
+# Usage
+questions = [
+    "What is machine learning?",
+    "How do vaccines work?",
+    "What is renewable energy?"
+]
+
+async def main():
+    results = await process_questions(questions)
+    
+    for result in results:
+        print(f"Question: {result['question']}")
+        if result['answer']:
+            print(f"Answer: {result['answer'][:200]}...")
+            print(f"Time: {result['execution_time']:.2f}s")
+        else:
+            print(f"Error: {result['error']}")
+        print("-" * 50)
+
+asyncio.run(main())
+```
+
+### Direct Module Usage
+
+#### Using Individual Search Modules
+
+```python
+import asyncio
+from search_agent.modules.selenium_search import search as selenium_search
+from search_agent.modules.brave_api_search import search as brave_search
+from search_agent.modules.web_content_extractor import extract_content
+
+async def custom_search_pipeline(query: str):
+    """Custom search pipeline using individual modules."""
+    
+    # Get search results from multiple sources
+    selenium_results = await asyncio.to_thread(selenium_search, query)
+    brave_results = await brave_search(query)
+    
+    # Extract content from top results
+    all_urls = []
+    for result in selenium_results.results[:3]:
+        all_urls.append(str(result.url))
+    for result in brave_results.results[:2]:
+        all_urls.append(str(result.url))
+    
+    # Extract content from URLs
+    content_results = []
+    for url in all_urls:
+        try:
+            content = await extract_content(url)
+            content_results.append(content)
+        except Exception as e:
+            print(f"Failed to extract content from {url}: {e}")
+    
+    return {
+        'selenium_results': selenium_results,
+        'brave_results': brave_results,
+        'extracted_content': content_results
+    }
+
+# Usage
+result = asyncio.run(custom_search_pipeline("Python programming"))
+print(f"Selenium found {len(result['selenium_results'].results)} results")
+print(f"Brave found {len(result['brave_results'].results)} results")
+```
+
+#### Using the LLM Client Directly
+
+```python
+from search_agent.utils.llm_client import LLMClient
+from search_agent.config import LLMConfig
+
+async def use_llm_directly():
+    """Use the LLM client directly for custom processing."""
+    
+    # Create LLM configuration
+    llm_config = LLMConfig(
+        provider="openrouter",
+        model="openrouter/cypher-alpha:free",
+        temperature=0.1,
+        max_tokens=1024
+    )
+    
+    # Initialize LLM client
+    llm_client = LLMClient(llm_config)
+    
+    # Use the client directly
+    response = await llm_client.generate_response(
+        prompt="Explain the concept of machine learning in simple terms.",
+        system_prompt="You are a helpful AI assistant that explains complex topics simply."
+    )
+    
+    return response
+
+# Usage
+response = asyncio.run(use_llm_directly())
+print(response)
+```
+
+### Error Handling and Robustness
+
+#### Comprehensive Error Handling
+
+```python
+import asyncio
+from typing import Optional, Dict, Any
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+from search_agent.answer_orchestrator import orchestrate_answer_generation
+from search_agent.core.exceptions import ScrapingError, NoResultsError
+
+async def robust_answer_generation(
+    question: str,
+    fallback_providers: Optional[List[str]] = None
+) -> Dict[str, Any]:
+    """Robust answer generation with fallback providers."""
+    
+    if fallback_providers is None:
+        fallback_providers = ["selenium", "brave", "httpx"]
+    
+    for provider in fallback_providers:
+        try:
+            config = Configuration(
+                query=question,
+                search=SearchConfig(
+                    provider=provider,
+                    max_results=10,
+                    max_urls=3,
+                    timeout=30
+                ),
+                llm=LLMConfig(
+                    provider="openrouter",
+                    model="openrouter/cypher-alpha:free"
+                )
+            )
+            
+            result = await orchestrate_answer_generation(
+                query=config.query,
+                num_links_to_parse=config.search.max_urls,
+                config=config
+            )
+            
+            return {
+                'success': True,
+                'provider_used': provider,
+                'result': result
+            }
+            
+        except (ScrapingError, NoResultsError) as e:
+            print(f"Provider {provider} failed: {e}")
+            continue
+        except Exception as e:
+            print(f"Unexpected error with {provider}: {e}")
+            continue
+    
+    return {
+        'success': False,
+        'error': 'All providers failed',
+        'result': None
+    }
+
+# Usage
+result = asyncio.run(robust_answer_generation("What is blockchain?"))
+if result['success']:
+    print(f"Answer using {result['provider_used']}: {result['result']['synthesized_answer']['answer']}")
+else:
+    print(f"Failed to get answer: {result['error']}")
+```
+
+### Configuration Management
+
+#### Loading Configuration from File
+
+```python
+from search_agent.config import Configuration
+
+# Load configuration from YAML file
+config = Configuration.from_file("config/my_config.yaml", query="What is AI?")
+
+# Use the configuration
+result = asyncio.run(orchestrate_answer_generation(
+    query=config.query,
+    num_links_to_parse=config.search.max_urls,
+    config=config
+))
+```
+
+#### Environment-Based Configuration
+
+```python
+import os
+from search_agent.config import Configuration
+
+# Set environment variables
+os.environ["SEARCH_PROVIDER"] = "selenium"
+os.environ["LLM_PROVIDER"] = "openrouter"
+os.environ["DEFAULT_LLM_MODEL"] = "openrouter/cypher-alpha:free"
+
+# Create configuration from environment
+config = Configuration.from_env("What is machine learning?")
+
+# Use the configuration
+result = asyncio.run(orchestrate_answer_generation(
+    query=config.query,
+    num_links_to_parse=config.search.max_urls,
+    config=config
+))
+```
+
+### Performance Optimization
+
+#### Caching Results
+
+```python
+import asyncio
+import json
+import hashlib
+from pathlib import Path
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+from search_agent.answer_orchestrator import orchestrate_answer_generation
+
+class CachedAnswerGenerator:
+    def __init__(self, cache_dir: str = "./cache"):
+        self.cache_dir = Path(cache_dir)
+        self.cache_dir.mkdir(exist_ok=True)
+    
+    def _get_cache_key(self, question: str, config: Configuration) -> str:
+        """Generate a cache key based on question and configuration."""
+        config_str = json.dumps(config.to_dict(), sort_keys=True)
+        combined = f"{question}:{config_str}"
+        return hashlib.md5(combined.encode()).hexdigest()
+    
+    async def get_answer(self, question: str, config: Configuration, use_cache: bool = True):
+        """Get answer with optional caching."""
+        
+        if use_cache:
+            cache_key = self._get_cache_key(question, config)
+            cache_file = self.cache_dir / f"{cache_key}.json"
+            
+            if cache_file.exists():
+                with open(cache_file, 'r') as f:
+                    return json.load(f)
+        
+        # Generate new answer
+        result = await orchestrate_answer_generation(
+            query=config.query,
+            num_links_to_parse=config.search.max_urls,
+            config=config
+        )
+        
+        # Cache the result
+        if use_cache:
+            cache_key = self._get_cache_key(question, config)
+            cache_file = self.cache_dir / f"{cache_key}.json"
+            with open(cache_file, 'w') as f:
+                json.dump(result, f, indent=2)
+        
+        return result
+
+# Usage
+generator = CachedAnswerGenerator()
+
+config = Configuration(
+    query="What is machine learning?",
+    search=SearchConfig(provider="selenium"),
+    llm=LLMConfig(provider="openrouter", model="openrouter/cypher-alpha:free")
+)
+
+# First call will cache the result
+result1 = asyncio.run(generator.get_answer("What is AI?", config))
+
+# Second call will use cached result (much faster)
+result2 = asyncio.run(generator.get_answer("What is AI?", config))
+```
+
+### Integration Examples
+
+#### Flask Web Application
+
+```python
+from flask import Flask, request, jsonify
+import asyncio
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+from search_agent.answer_orchestrator import orchestrate_answer_generation
+
+app = Flask(__name__)
+
+@app.route('/ask', methods=['POST'])
+def ask_question():
+    """API endpoint for asking questions."""
+    
+    data = request.get_json()
+    question = data.get('question', '')
+    
+    if not question:
+        return jsonify({'error': 'Question is required'}), 400
+    
+    try:
+        config = Configuration(
+            query=question,
+            search=SearchConfig(
+                provider="selenium",
+                max_results=10,
+                max_urls=3
+            ),
+            llm=LLMConfig(
+                provider="openrouter",
+                model="openrouter/cypher-alpha:free"
+            )
+        )
+        
+        result = asyncio.run(orchestrate_answer_generation(
+            query=config.query,
+            num_links_to_parse=config.search.max_urls,
+            config=config
+        ))
+        
+        return jsonify({
+            'answer': result['synthesized_answer']['answer'],
+            'sources': result['source_urls'],
+            'execution_time': result['execution_time_seconds'],
+            'quality_scores': result.get('evaluation_results', {})
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+#### Django Integration
+
+```python
+# views.py
+import asyncio
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+import json
+from search_agent.config import Configuration, SearchConfig, LLMConfig
+from search_agent.answer_orchestrator import orchestrate_answer_generation
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def ask_question(request):
+    """Django view for handling question requests."""
+    
+    try:
+        data = json.loads(request.body)
+        question = data.get('question', '')
+        
+        if not question:
+            return JsonResponse({'error': 'Question is required'}, status=400)
+        
+        config = Configuration(
+            query=question,
+            search=SearchConfig(
+                provider="selenium",
+                max_results=10,
+                max_urls=3
+            ),
+            llm=LLMConfig(
+                provider="openrouter",
+                model="openrouter/cypher-alpha:free"
+            )
+        )
+        
+        result = asyncio.run(orchestrate_answer_generation(
+            query=config.query,
+            num_links_to_parse=config.search.max_urls,
+            config=config
+        ))
+        
+        return JsonResponse({
+            'answer': result['synthesized_answer']['answer'],
+            'sources': result['source_urls'],
+            'execution_time': result['execution_time_seconds'],
+            'quality_scores': result.get('evaluation_results', {})
+        })
+        
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+```
+
+### Best Practices
+
+1. **Provider Selection**: Choose providers based on your needs:
+   - `"selenium"` for reliable, comprehensive results
+   - `"brave"` for fast API-based results
+   - `"all"` for maximum coverage (slower)
+   - Multiple providers like `"selenium,brave"` for balance
+
+2. **Error Handling**: Always wrap calls in try-catch blocks and implement fallback strategies.
+
+3. **Caching**: Implement caching for repeated queries to improve performance.
+
+4. **Configuration Management**: Use configuration files for different environments (development, production).
+
+5. **Async/Await**: Use proper async/await patterns when calling async functions.
+
+6. **Resource Management**: Be mindful of API rate limits and resource usage.
+
+7. **Monitoring**: Log execution times and success rates for monitoring.
+
 ## Core Models
 
 ### SearchResult
