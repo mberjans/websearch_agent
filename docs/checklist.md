@@ -80,7 +80,7 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 - [x] **CORE-008.3**: Add project-based organization of results
 - [x] **CORE-008.4**: Implement timestamp-based file naming
 - [x] **CORE-008.5**: Add function to generate full output paths
-- [ ] **CORE-008.6**: Test directory creation and path generation
+- [x] **CORE-008.6**: Test directory creation and path generation
 
 ## Command-Line Interface
 
