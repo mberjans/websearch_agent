@@ -103,7 +103,7 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 - [x] **CLI-002.5**: Add `no-cache` flag
 - [x] **CLI-002.6**: Implement `force-refresh` flag
 - [x] **CLI-002.7**: Add help text for all arguments
-- [ ] **CLI-002.8**: Test search configuration argument parsing
+- [x] **CLI-002.8**: Test search configuration argument parsing
 
 ### CLI-003: Implement LLM configuration arguments
 

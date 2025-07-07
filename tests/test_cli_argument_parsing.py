@@ -68,4 +68,86 @@ def test_valid_arguments():
         "--output-file", "valid_file"
     ])
     # Should not error due to validation
-    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing 
+    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+
+
+def test_search_provider_argument():
+    result = runner.invoke(app, [
+        "search",
+        "test query",
+        "--search-provider", "selenium"
+    ])
+    # Should not error
+    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+    # Output should mention the search provider
+    assert "selenium" in result.output or "Search Provider" in result.output
+
+
+def test_max_results_argument():
+    result = runner.invoke(app, [
+        "search",
+        "test query",
+        "--max-results", "5"
+    ])
+    # Should not error
+    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+    # Output should mention max results
+    assert "5" in result.output or "Max Results" in result.output
+
+
+def test_max_urls_argument():
+    result = runner.invoke(app, [
+        "search",
+        "test query",
+        "--max-urls", "2"
+    ])
+    # Should not error
+    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+
+
+def test_timeout_argument():
+    result = runner.invoke(app, [
+        "search",
+        "test query",
+        "--timeout", "60"
+    ])
+    # Should not error
+    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+
+
+def test_no_cache_flag():
+    result = runner.invoke(app, [
+        "search",
+        "test query",
+        "--no-cache"
+    ])
+    # Should not error
+    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+
+
+def test_force_refresh_flag():
+    result = runner.invoke(app, [
+        "search",
+        "test query",
+        "--force-refresh"
+    ])
+    # Should not error
+    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+
+
+def test_multiple_search_arguments():
+    result = runner.invoke(app, [
+        "search",
+        "test query",
+        "--search-provider", "playwright",
+        "--max-results", "10",
+        "--max-urls", "3",
+        "--timeout", "30",
+        "--no-cache",
+        "--force-refresh"
+    ])
+    # Should not error
+    assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+    # Output should mention the arguments
+    assert "playwright" in result.output or "Search Provider" in result.output
+    assert "10" in result.output or "Max Results" in result.output 
