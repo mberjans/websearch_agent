@@ -1,0 +1,32 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+rootdir: /Users/Mark/Research/Clinical_Metabolomics_Oracle/websearch_agent
+configfile: pyproject.toml
+plugins: anyio-4.9.0, mock-3.14.1, asyncio-1.0.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 1 item
+
+tests/test_cli_argument_parsing.py F
+
+=================================== FAILURES ===================================
+__________________________ test_core_argument_parsing __________________________
+
+    def test_core_argument_parsing():
+        result = runner.invoke(app, [
+            "search",
+            "--query", "test query",
+            "--output-dir", "./my_output",
+            "--output-file", "myfile",
+            "--project-name", "myproject"
+        ])
+        # Should not error
+>       assert result.exit_code == 0 or result.exit_code == 1  # 1 is allowed if API keys are missing
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (2 == 0 or 2 == 1)
+E        +  where 2 = <Result SystemExit(2)>.exit_code
+E        +  and   2 = <Result SystemExit(2)>.exit_code
+
+tests/test_cli_argument_parsing.py:16: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_cli_argument_parsing.py::test_core_argument_parsing - asser...
+============================== 1 failed in 0.86s ===============================

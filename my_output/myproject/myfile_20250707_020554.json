@@ -1,0 +1,35 @@
+{
+  "query": "test query",
+  "synthesized_answer": {
+    "answer": "I encountered an unexpected error while trying to answer your question about 'test query'. Please try again later.",
+    "source_urls": [],
+    "timestamp_utc": "2025-07-07 08:05:54.283557+00:00",
+    "execution_time_seconds": 0.0
+  },
+  "evaluation_results": {
+    "factual_consistency_score": 0.0,
+    "relevance_score": 0.0,
+    "completeness_score": 0.0,
+    "conciseness_score": 0.0,
+    "llm_feedback": null,
+    "nlp_relevance_score": null
+  },
+  "source_urls": [],
+  "timestamp_utc": "2025-07-07 08:05:54.283752+00:00",
+  "execution_time_seconds": 0.10410437500104308,
+  "metadata": {
+    "total_urls_found": 0,
+    "urls_selected": 0,
+    "extraction_success_count": 0,
+    "extraction_failure_count": 0,
+    "low_quality_content_count": 0,
+    "search_execution_time": 0,
+    "content_extraction_time": 0,
+    "answer_synthesis_time": 0,
+    "answer_evaluation_time": 0,
+    "errors": [
+      "Unexpected error: search() takes 1 positional argument but 2 were given"
+    ]
+  },
+  "extracted_contents": []
+}

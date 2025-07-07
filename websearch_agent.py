@@ -17,11 +17,12 @@ from typing import Optional, List
 from search_agent.config import Configuration
 from search_agent.answer_orchestrator import orchestrate_answer_generation
 from search_agent.core.exceptions import SearchAgentError
+from search_agent import __version__
 
 # Create the Typer app
 app = typer.Typer(
     name="websearch-agent",
-    help="Clinical Metabolomics Oracle Web Search Agent",
+    help=f"Clinical Metabolomics Oracle Web Search Agent (v{__version__})",
     add_completion=False
 )
 

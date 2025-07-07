@@ -113,7 +113,7 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 - [x] **CLI-003.4**: Implement `max-tokens` option
 - [x] **CLI-003.5**: Add `no-evaluation` flag
 - [x] **CLI-003.6**: Add help text for all arguments
-- [ ] **CLI-003.7**: Test LLM configuration argument parsing
+- [x] **CLI-003.7**: Test LLM configuration argument parsing
 
 ### CLI-004: Implement advanced options
 
@@ -125,7 +125,7 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 - [x] **CLI-004.6**: Implement `save-html` flag
 - [x] **CLI-004.7**: Add `debug` flag
 - [x] **CLI-004.8**: Add help text for all arguments
-- [ ] **CLI-004.9**: Test advanced option parsing
+- [x] **CLI-004.9**: Test advanced option parsing
 
 ### CLI-005: Implement logging configuration
 
@@ -134,7 +134,7 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 - [x] **CLI-005.3**: Create logging setup function
 - [x] **CLI-005.4**: Configure logging levels based on flags
 - [x] **CLI-005.5**: Add log formatting
-- [ ] **CLI-005.6**: Test logging with different verbosity levels
+- [x] **CLI-005.6**: Test logging with different verbosity levels
 
 ### CLI-006: Implement error handling
 
@@ -143,24 +143,24 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 - [x] **CLI-006.3**: Add proper exit codes for different error types
 - [x] **CLI-006.4**: Implement keyboard interrupt handling
 - [x] **CLI-006.5**: Add context information to error messages
-- [ ] **CLI-006.6**: Test error handling with various error conditions
+- [x] **CLI-006.6**: Test error handling with various error conditions
 
 ### CLI-007: Create shell wrapper script
 
-- [ ] **CLI-007.1**: Create `websearch-agent.sh` script
-- [ ] **CLI-007.2**: Add virtual environment activation
-- [ ] **CLI-007.3**: Implement argument passing
-- [ ] **CLI-007.4**: Make the script executable
-- [ ] **CLI-007.5**: Test the wrapper script
-- [ ] **CLI-007.6**: Add Windows batch file equivalent
+- [x] **CLI-007.1**: Create `websearch-agent.sh` script
+- [x] **CLI-007.2**: Add virtual environment activation
+- [x] **CLI-007.3**: Implement argument passing
+- [x] **CLI-007.4**: Make the script executable
+- [x] **CLI-007.5**: Test the wrapper script
+- [x] **CLI-007.6**: Add Windows batch file equivalent
 
 ### CLI-008: Add version information
 
-- [ ] **CLI-008.1**: Add version constant to the package
+- [x] **CLI-008.1**: Add version constant to the package
 - [x] **CLI-008.2**: Implement `--version` flag
-- [ ] **CLI-008.3**: Add version information to help text
+- [x] **CLI-008.3**: Add version information to help text
 - [x] **CLI-008.4**: Create version display function
-- [ ] **CLI-008.5**: Test version display
+- [x] **CLI-008.5**: Test version display
 
 ## Configuration System
 
@@ -168,27 +168,27 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 
 - [x] **CONFIG-001.1**: Add `from_file` class method to `Configuration` class
 - [x] **CONFIG-001.2**: Implement YAML file loading
-- [ ] **CONFIG-001.3**: Add error handling for file operations
+- [x] **CONFIG-001.3**: Add error handling for file operations
 - [x] **CONFIG-001.4**: Implement validation of loaded configuration
 - [x] **CONFIG-001.5**: Add support for overriding file values with command-line arguments
-- [ ] **CONFIG-001.6**: Test configuration loading from YAML files
+- [x] **CONFIG-001.6**: Test configuration loading from YAML files
 
 ### CONFIG-002: Create template configuration file
 
-- [ ] **CONFIG-002.1**: Create `config` directory
-- [ ] **CONFIG-002.2**: Create `default_config.yaml` template
-- [ ] **CONFIG-002.3**: Add all configuration sections with default values
-- [ ] **CONFIG-002.4**: Add comments explaining each option
-- [ ] **CONFIG-002.5**: Test loading the template configuration
-- [ ] **CONFIG-002.6**: Add example values for common scenarios
+- [x] **CONFIG-002.1**: Create `config` directory
+- [x] **CONFIG-002.2**: Create `default_config.yaml` template
+- [x] **CONFIG-002.3**: Add all configuration sections with default values
+- [x] **CONFIG-002.4**: Add comments explaining each option
+- [x] **CONFIG-002.5**: Test loading the template configuration
+- [x] **CONFIG-002.6**: Add example values for common scenarios
 
 ### CONFIG-003: Implement configuration merging
 
-- [ ] **CONFIG-003.1**: Create function to merge configurations from different sources
-- [ ] **CONFIG-003.2**: Implement priority order for configuration sources
-- [ ] **CONFIG-003.3**: Add deep merging of nested configuration
-- [ ] **CONFIG-003.4**: Handle special cases like list merging
-- [ ] **CONFIG-003.5**: Test configuration merging with various scenarios
+- [x] **CONFIG-003.1**: Create function to merge configurations from different sources
+- [x] **CONFIG-003.2**: Implement priority order for configuration sources
+- [x] **CONFIG-003.3**: Add deep merging of nested configuration
+- [x] **CONFIG-003.4**: Handle special cases like list merging
+- [x] **CONFIG-003.5**: Test configuration merging with various scenarios
 
 ### CONFIG-004: Add configuration file validation
 

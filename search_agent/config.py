@@ -167,33 +167,62 @@ class Configuration(BaseModel):
             
         Raises:
             FileNotFoundError: If the configuration file doesn't exist
+            PermissionError: If the file cannot be read due to permissions
             yaml.YAMLError: If the YAML file is malformed
             ValueError: If the configuration data is invalid
+            OSError: For other file system errors
         """
         try:
             config_path_obj = Path(config_path)
+            
+            # Check if file exists
             if not config_path_obj.exists():
                 raise FileNotFoundError(f"Configuration file not found: {config_path}")
             
-            with open(config_path_obj, 'r', encoding='utf-8') as f:
-                config_data = yaml.safe_load(f)
+            # Check if it's a file (not a directory)
+            if not config_path_obj.is_file():
+                raise ValueError(f"Path is not a file: {config_path}")
+            
+            # Check if file is readable
+            if not os.access(config_path_obj, os.R_OK):
+                raise PermissionError(f"Cannot read configuration file due to permissions: {config_path}")
+            
+            # Try to open and read the file
+            try:
+                with open(config_path_obj, 'r', encoding='utf-8') as f:
+                    config_data = yaml.safe_load(f)
+            except UnicodeDecodeError as e:
+                raise ValueError(f"Configuration file contains invalid UTF-8 encoding: {config_path}") from e
+            except PermissionError as e:
+                raise PermissionError(f"Cannot read configuration file due to permissions: {config_path}") from e
+            except OSError as e:
+                raise OSError(f"Error reading configuration file {config_path}: {e}") from e
             
             if config_data is None:
                 config_data = {}
             
+            # Filter out None values to use defaults instead
+            filtered_data = {}
+            for key, value in config_data.items():
+                if value is not None:
+                    filtered_data[key] = value
+            
             # If query is provided, override the one in the config file
             if query:
-                config_data["query"] = query
-            elif "query" not in config_data:
+                filtered_data["query"] = query
+            elif "query" not in filtered_data:
                 # If no query in file and none provided, use empty string
-                config_data["query"] = ""
+                filtered_data["query"] = ""
                 
-            return cls(**config_data)
+            return cls(**filtered_data)
             
         except yaml.YAMLError as e:
             raise ValueError(f"Invalid YAML in configuration file {config_path}: {e}")
+        except (FileNotFoundError, PermissionError, OSError, ValueError) as e:
+            # Re-raise these specific exceptions as-is
+            raise
         except Exception as e:
-            raise ValueError(f"Error loading configuration from {config_path}: {e}")
+            raise ValueError(f"Unexpected error loading configuration from {config_path}: {e}")
     
     def to_env_vars(self) -> Dict[str, str]:
         """
@@ -273,3 +302,72 @@ class Configuration(BaseModel):
         """
         with open(file_path, 'w') as f:
             f.write(self.to_yaml())
+    
+    @classmethod
+    def merge_configurations(cls, *configs: "Configuration") -> "Configuration":
+        """
+        Merge multiple configurations with priority order.
+        
+        Later configurations in the list have higher priority and will override
+        earlier configurations. This allows for a clear precedence order:
+        1. Default configuration (lowest priority)
+        2. Configuration file
+        3. Environment variables
+        4. Command-line arguments (highest priority)
+        
+        Args:
+            *configs: Configuration objects to merge
+            
+        Returns:
+            Merged configuration object
+            
+        Raises:
+            ValueError: If no configurations provided
+        """
+        if not configs:
+            raise ValueError("At least one configuration must be provided for merging")
+        
+        if len(configs) == 1:
+            # Return a new instance to avoid modifying the original
+            return cls(**configs[0].to_dict())
+        
+        # Start with the first configuration
+        merged_dict = configs[0].to_dict()
+        
+        # Merge subsequent configurations (higher priority)
+        for config in configs[1:]:
+            merged_dict = cls._deep_merge(merged_dict, config.to_dict())
+        
+        return cls(**merged_dict)
+    
+    @staticmethod
+    def _deep_merge(base_dict: Dict[str, Any], override_dict: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Deep merge two dictionaries, with override_dict taking precedence.
+        
+        Args:
+            base_dict: Base dictionary
+            override_dict: Override dictionary (higher priority)
+            
+        Returns:
+            Merged dictionary
+        """
+        result = base_dict.copy()
+        
+        for key, value in override_dict.items():
+            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+                # Recursively merge nested dictionaries
+                result[key] = Configuration._deep_merge(result[key], value)
+            elif key in result and isinstance(result[key], list) and isinstance(value, list):
+                # For lists, we could either extend or replace
+                # Here we choose to replace for simplicity, but this could be configurable
+                result[key] = value
+            elif key in result and isinstance(result[key], set) and isinstance(value, set):
+                # For sets, we could either union or replace
+                # Here we choose to replace for simplicity
+                result[key] = value
+            else:
+                # Override with new value for all other types
+                result[key] = value
+        
+        return result
