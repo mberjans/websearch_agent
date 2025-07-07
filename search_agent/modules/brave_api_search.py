@@ -7,10 +7,13 @@ to provide fast, reliable search results from a commercial search service.
 import asyncio
 import time
 from datetime import datetime, timezone
-from typing import List
+from typing import List, Optional, TYPE_CHECKING
 
 import typer
 import httpx
+
+if TYPE_CHECKING:
+    from search_agent.config import Configuration
 from search_agent.core.models import SearchResult, SearchModuleOutput
 from search_agent.core.exceptions import ScrapingError, NoResultsError, ConfigurationError
 from search_agent.config import settings
@@ -19,10 +22,17 @@ from search_agent.config import settings
 app = typer.Typer()
 
 
-async def search(query: str) -> SearchModuleOutput:
+async def search(query: str, config: Optional['Configuration'] = None) -> SearchModuleOutput:
     """
     The core library function that performs the search using Brave Search API.
     This function contains the main logic and is what other parts of the system will import and call.
+    
+    Args:
+        query: The search query to execute
+        config: Optional configuration object for search parameters
+        
+    Returns:
+        SearchModuleOutput containing search results
     """
     start_time = time.perf_counter()
     
@@ -33,10 +43,28 @@ async def search(query: str) -> SearchModuleOutput:
     # Brave Search API endpoint
     api_url = "https://api.search.brave.com/res/v1/web/search"
     
+    # Get configuration parameters
+    max_results = 10
+    timeout_seconds = 30.0
+    user_agent = None
+    proxy = None
+    
+    if config:
+        if hasattr(config, 'search'):
+            if config.search.max_results:
+                max_results = config.search.max_results
+            if config.search.timeout:
+                timeout_seconds = float(config.search.timeout)
+        if hasattr(config, 'advanced'):
+            if config.advanced.user_agent:
+                user_agent = config.advanced.user_agent
+            if config.advanced.proxy:
+                proxy = config.advanced.proxy
+    
     # Request parameters
     params = {
         "q": query,
-        "count": 10,  # Number of results to return
+        "count": max_results,  # Number of results to return
         "offset": 0,  # Starting offset
         "mkt": "en-US",  # Market/locale
         "safesearch": "moderate",  # Safe search setting
@@ -52,8 +80,16 @@ async def search(query: str) -> SearchModuleOutput:
         "X-Subscription-Token": settings.BRAVE_API_KEY
     }
     
+    if user_agent:
+        headers["User-Agent"] = user_agent
+    
     try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        # Configure HTTP client
+        client_kwargs = {"timeout": timeout_seconds}
+        if proxy:
+            client_kwargs["proxies"] = proxy
+            
+        async with httpx.AsyncClient(**client_kwargs) as client:
             response = await client.get(api_url, params=params, headers=headers)
             
             # Check for API errors

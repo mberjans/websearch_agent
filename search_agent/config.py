@@ -158,15 +158,36 @@ class Configuration(BaseModel):
             
         Returns:
             Configuration instance loaded from the file
-        """
-        with open(config_path, 'r') as f:
-            config_data = yaml.safe_load(f)
-        
-        # If query is provided, override the one in the config file
-        if query:
-            config_data["query"] = query
             
-        return cls(**config_data)
+        Raises:
+            FileNotFoundError: If the configuration file doesn't exist
+            yaml.YAMLError: If the YAML file is malformed
+            ValueError: If the configuration data is invalid
+        """
+        try:
+            config_path = Path(config_path)
+            if not config_path.exists():
+                raise FileNotFoundError(f"Configuration file not found: {config_path}")
+            
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config_data = yaml.safe_load(f)
+            
+            if config_data is None:
+                config_data = {}
+            
+            # If query is provided, override the one in the config file
+            if query:
+                config_data["query"] = query
+            elif "query" not in config_data:
+                # If no query in file and none provided, use empty string
+                config_data["query"] = ""
+                
+            return cls(**config_data)
+            
+        except yaml.YAMLError as e:
+            raise ValueError(f"Invalid YAML in configuration file {config_path}: {e}")
+        except Exception as e:
+            raise ValueError(f"Error loading configuration from {config_path}: {e}")
     
     def to_env_vars(self) -> Dict[str, str]:
         """

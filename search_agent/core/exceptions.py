@@ -33,3 +33,8 @@ class APIError(SearchAgentError):
 class TimeoutError(SearchAgentError):
     """Raised when operations timeout."""
     pass
+
+
+class SearchException(SearchAgentError):
+    """Raised when search operations fail."""
+    pass

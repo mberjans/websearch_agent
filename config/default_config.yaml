@@ -1,0 +1,124 @@
+# Clinical Metabolomics Oracle Web Search Agent Configuration
+# This is a template configuration file showing all available options with their default values
+
+# The query to search for (can be overridden via command line)
+query: "What is clinical metabolomics?"
+
+# Search configuration
+search:
+  # Search provider(s) to use: "all", "selenium", "playwright", "brave_api", "google_cse", "httpx"
+  # Can be comma-separated for multiple providers: "selenium,playwright"
+  provider: "all"
+  
+  # Maximum number of search results to retrieve (1-100)
+  max_results: 10
+  
+  # Maximum number of URLs to extract content from (1-20)
+  max_urls: 3
+  
+  # Timeout for search and extraction operations in seconds (1-300)
+  timeout: 30
+  
+  # Enable caching of search results
+  cache: true
+  
+  # Force refresh of cached results
+  force_refresh: false
+
+# LLM (Language Model) configuration
+llm:
+  # LLM API provider: "openrouter", "openai", "anthropic"
+  provider: "openrouter"
+  
+  # LLM model to use (depends on provider)
+  # OpenRouter: "gpt-4o-mini", "gpt-4o", "claude-3-sonnet", etc.
+  # OpenAI: "gpt-4", "gpt-3.5-turbo", etc.
+  # Anthropic: "claude-3-opus", "claude-3-sonnet", etc.
+  model: "gpt-4o-mini"
+  
+  # Temperature parameter for LLM (0.0-2.0)
+  # Lower values = more focused/deterministic, higher values = more creative
+  temperature: 0.1
+  
+  # Maximum tokens for LLM response (1-8192)
+  max_tokens: 1024
+  
+  # Enable answer quality evaluation
+  evaluation: true
+
+# Output configuration
+output:
+  # Directory to save results
+  directory: "./output"
+  
+  # Base name for output files (timestamp will be appended)
+  file: "answer_result"
+  
+  # Absolute path for output file (overrides directory and file if specified)
+  path: null
+  
+  # Project name for organizing results into subdirectories
+  project_name: "default_project"
+
+# Advanced options
+advanced:
+  # Proxy URL for web requests (e.g., "http://proxy.example.com:8080")
+  proxy: null
+  
+  # Custom user agent for web requests
+  user_agent: null
+  
+  # Number of retries for failed operations (0-10)
+  retry_count: 3
+  
+  # Extract and include images in results
+  extract_images: false
+  
+  # Save raw HTML of extracted pages
+  save_html: false
+  
+  # Enable debug mode
+  debug: false
+
+# Example configurations for different use cases:
+
+# Research Configuration (more comprehensive)
+# search:
+#   provider: "all"
+#   max_results: 20
+#   max_urls: 5
+#   timeout: 60
+# llm:
+#   model: "gpt-4o"
+#   temperature: 0.2
+#   max_tokens: 2048
+#   evaluation: true
+
+# Quick Search Configuration (faster)
+# search:
+#   provider: "brave_api"
+#   max_results: 5
+#   max_urls: 2
+#   timeout: 15
+# llm:
+#   model: "gpt-4o-mini"
+#   temperature: 0.1
+#   max_tokens: 512
+#   evaluation: false
+
+# Academic Research Configuration
+# search:
+#   provider: "google_cse,selenium"
+#   max_results: 15
+#   max_urls: 4
+#   timeout: 45
+# llm:
+#   model: "claude-3-sonnet"
+#   temperature: 0.15
+#   max_tokens: 1500
+#   evaluation: true
+# output:
+#   project_name: "academic_research"
+# advanced:
+#   save_html: true
+#   extract_images: true

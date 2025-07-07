@@ -58,11 +58,11 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 
 ### CORE-006: Implement backward compatibility
 
-- [ ] **CORE-006.1**: Identify all functions that need to maintain backward compatibility
-- [ ] **CORE-006.2**: Add optional configuration parameters to these functions
-- [ ] **CORE-006.3**: Implement fallback to environment variables when configuration is not provided
-- [ ] **CORE-006.4**: Test existing code with new configuration system
-- [ ] **CORE-006.5**: Update function signatures while maintaining compatibility
+- [x] **CORE-006.1**: Identify all functions that need to maintain backward compatibility
+- [x] **CORE-006.2**: Add optional configuration parameters to these functions
+- [x] **CORE-006.3**: Implement fallback to environment variables when configuration is not provided
+- [x] **CORE-006.4**: Test existing code with new configuration system
+- [x] **CORE-006.5**: Update function signatures while maintaining compatibility
 - [ ] **CORE-006.6**: Add deprecation warnings for old usage patterns
 
 ### CORE-007: Add PyYAML dependency
@@ -75,74 +75,74 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 
 ### CORE-008: Create directory structure for outputs
 
-- [ ] **CORE-008.1**: Design the output directory structure
-- [ ] **CORE-008.2**: Implement function to create output directories
-- [ ] **CORE-008.3**: Add project-based organization of results
-- [ ] **CORE-008.4**: Implement timestamp-based file naming
-- [ ] **CORE-008.5**: Add function to generate full output paths
+- [x] **CORE-008.1**: Design the output directory structure
+- [x] **CORE-008.2**: Implement function to create output directories
+- [x] **CORE-008.3**: Add project-based organization of results
+- [x] **CORE-008.4**: Implement timestamp-based file naming
+- [x] **CORE-008.5**: Add function to generate full output paths
 - [ ] **CORE-008.6**: Test directory creation and path generation
 
 ## Command-Line Interface
 
 ### CLI-001: Implement core arguments
 
-- [ ] **CLI-001.1**: Add `query` argument to the main command
-- [ ] **CLI-001.2**: Implement `output-dir` option
-- [ ] **CLI-001.3**: Add `output-file` option
-- [ ] **CLI-001.4**: Implement `project-name` option
-- [ ] **CLI-001.5**: Add help text for all arguments
+- [x] **CLI-001.1**: Add `query` argument to the main command
+- [x] **CLI-001.2**: Implement `output-dir` option
+- [x] **CLI-001.3**: Add `output-file` option
+- [x] **CLI-001.4**: Implement `project-name` option
+- [x] **CLI-001.5**: Add help text for all arguments
 - [ ] **CLI-001.6**: Test argument parsing
 - [ ] **CLI-001.7**: Implement validation for core arguments
 
 ### CLI-002: Implement search configuration arguments
 
-- [ ] **CLI-002.1**: Add `search-provider` option
-- [ ] **CLI-002.2**: Implement `max-results` option
-- [ ] **CLI-002.3**: Add `max-urls` option
-- [ ] **CLI-002.4**: Implement `timeout` option
-- [ ] **CLI-002.5**: Add `no-cache` flag
-- [ ] **CLI-002.6**: Implement `force-refresh` flag
-- [ ] **CLI-002.7**: Add help text for all arguments
+- [x] **CLI-002.1**: Add `search-provider` option
+- [x] **CLI-002.2**: Implement `max-results` option
+- [x] **CLI-002.3**: Add `max-urls` option
+- [x] **CLI-002.4**: Implement `timeout` option
+- [x] **CLI-002.5**: Add `no-cache` flag
+- [x] **CLI-002.6**: Implement `force-refresh` flag
+- [x] **CLI-002.7**: Add help text for all arguments
 - [ ] **CLI-002.8**: Test search configuration argument parsing
 
 ### CLI-003: Implement LLM configuration arguments
 
-- [ ] **CLI-003.1**: Add `llm-provider` option
-- [ ] **CLI-003.2**: Implement `llm-model` option
-- [ ] **CLI-003.3**: Add `temperature` option
-- [ ] **CLI-003.4**: Implement `max-tokens` option
-- [ ] **CLI-003.5**: Add `no-evaluation` flag
-- [ ] **CLI-003.6**: Add help text for all arguments
+- [x] **CLI-003.1**: Add `llm-provider` option
+- [x] **CLI-003.2**: Implement `llm-model` option
+- [x] **CLI-003.3**: Add `temperature` option
+- [x] **CLI-003.4**: Implement `max-tokens` option
+- [x] **CLI-003.5**: Add `no-evaluation` flag
+- [x] **CLI-003.6**: Add help text for all arguments
 - [ ] **CLI-003.7**: Test LLM configuration argument parsing
 
 ### CLI-004: Implement advanced options
 
-- [ ] **CLI-004.1**: Add `config-file` option
-- [ ] **CLI-004.2**: Implement `proxy` option
-- [ ] **CLI-004.3**: Add `user-agent` option
-- [ ] **CLI-004.4**: Implement `retry-count` option
-- [ ] **CLI-004.5**: Add `extract-images` flag
-- [ ] **CLI-004.6**: Implement `save-html` flag
-- [ ] **CLI-004.7**: Add `debug` flag
-- [ ] **CLI-004.8**: Add help text for all arguments
+- [x] **CLI-004.1**: Add `config-file` option
+- [x] **CLI-004.2**: Implement `proxy` option
+- [x] **CLI-004.3**: Add `user-agent` option
+- [x] **CLI-004.4**: Implement `retry-count` option
+- [x] **CLI-004.5**: Add `extract-images` flag
+- [x] **CLI-004.6**: Implement `save-html` flag
+- [x] **CLI-004.7**: Add `debug` flag
+- [x] **CLI-004.8**: Add help text for all arguments
 - [ ] **CLI-004.9**: Test advanced option parsing
 
 ### CLI-005: Implement logging configuration
 
-- [ ] **CLI-005.1**: Add `verbose` flag
-- [ ] **CLI-005.2**: Implement `quiet` flag
-- [ ] **CLI-005.3**: Create logging setup function
-- [ ] **CLI-005.4**: Configure logging levels based on flags
-- [ ] **CLI-005.5**: Add log formatting
+- [x] **CLI-005.1**: Add `verbose` flag
+- [x] **CLI-005.2**: Implement `quiet` flag
+- [x] **CLI-005.3**: Create logging setup function
+- [x] **CLI-005.4**: Configure logging levels based on flags
+- [x] **CLI-005.5**: Add log formatting
 - [ ] **CLI-005.6**: Test logging with different verbosity levels
 
 ### CLI-006: Implement error handling
 
-- [ ] **CLI-006.1**: Add try-except blocks around main functionality
-- [ ] **CLI-006.2**: Implement user-friendly error messages
-- [ ] **CLI-006.3**: Add proper exit codes for different error types
-- [ ] **CLI-006.4**: Implement keyboard interrupt handling
-- [ ] **CLI-006.5**: Add context information to error messages
+- [x] **CLI-006.1**: Add try-except blocks around main functionality
+- [x] **CLI-006.2**: Implement user-friendly error messages
+- [x] **CLI-006.3**: Add proper exit codes for different error types
+- [x] **CLI-006.4**: Implement keyboard interrupt handling
+- [x] **CLI-006.5**: Add context information to error messages
 - [ ] **CLI-006.6**: Test error handling with various error conditions
 
 ### CLI-007: Create shell wrapper script
@@ -157,20 +157,20 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 ### CLI-008: Add version information
 
 - [ ] **CLI-008.1**: Add version constant to the package
-- [ ] **CLI-008.2**: Implement `--version` flag
+- [x] **CLI-008.2**: Implement `--version` flag
 - [ ] **CLI-008.3**: Add version information to help text
-- [ ] **CLI-008.4**: Create version display function
+- [x] **CLI-008.4**: Create version display function
 - [ ] **CLI-008.5**: Test version display
 
 ## Configuration System
 
 ### CONFIG-001: Implement YAML configuration file parsing
 
-- [ ] **CONFIG-001.1**: Add `from_file` class method to `Configuration` class
-- [ ] **CONFIG-001.2**: Implement YAML file loading
+- [x] **CONFIG-001.1**: Add `from_file` class method to `Configuration` class
+- [x] **CONFIG-001.2**: Implement YAML file loading
 - [ ] **CONFIG-001.3**: Add error handling for file operations
-- [ ] **CONFIG-001.4**: Implement validation of loaded configuration
-- [ ] **CONFIG-001.5**: Add support for overriding file values with command-line arguments
+- [x] **CONFIG-001.4**: Implement validation of loaded configuration
+- [x] **CONFIG-001.5**: Add support for overriding file values with command-line arguments
 - [ ] **CONFIG-001.6**: Test configuration loading from YAML files
 
 ### CONFIG-002: Create template configuration file
