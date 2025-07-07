@@ -68,7 +68,7 @@ async def extract_main_content(url: str) -> Optional[str]:
         }
         
         logger.info(f"Fetching content from: {url}")
-        async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
+        async with httpx.AsyncClient(timeout=15.0, follow_redirects=True, verify=False) as client:
             response = await client.get(url, headers=headers)
             response.raise_for_status()  # Raise an exception for bad status codes
             

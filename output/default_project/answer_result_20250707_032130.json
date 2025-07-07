@@ -1,0 +1,41 @@
+{
+  "query": "What is clinical metabolomics?",
+  "synthesized_answer": {
+    "answer": "Clinical metabolomics involves identifying and characterizing biomarkers through the analysis of metabolic signatures to provide insights into physiological states and diagnose diseases like cancer, diabetes, and cardiovascular disorders. It facilitates early diagnosis, monitors disease progression, and assesses treatment responses.",
+    "source_urls": [
+      "https://generalmetabolics.com/metabolomics/"
+    ],
+    "timestamp_utc": "2025-07-07 09:21:43.264744+00:00",
+    "execution_time_seconds": 2.4064850830473006
+  },
+  "evaluation_results": {
+    "factual_consistency_score": 1.0,
+    "relevance_score": 1.0,
+    "completeness_score": 0.9,
+    "conciseness_score": 0.8,
+    "llm_feedback": "The synthesized answer provides a clear and accurate representation of clinical metabolomics based on the source content. It effectively captures the key facts about identifying biomarkers, analyzing metabolic signatures, and diagnosing diseases. The relevance to the original query is high, and the completeness is strong, though it slightly omits the nuanced emphasis on early diagnosis and treatment response assessment from the source. Overall, it is concise but could be further honed by integrating the importance of early diagnosis more prominently. spaCy model 'en_core_web_md' not found. Please install it with: python -m spacy download en_core_web_md",
+    "nlp_relevance_score": null
+  },
+  "source_urls": [
+    "https://generalmetabolics.com/metabolomics/"
+  ],
+  "timestamp_utc": "2025-07-07 09:21:43.264806+00:00",
+  "execution_time_seconds": 12.910979375010356,
+  "metadata": {
+    "total_urls_found": 10,
+    "urls_selected": 2,
+    "extraction_success_count": 1,
+    "extraction_failure_count": 1,
+    "low_quality_content_count": 0,
+    "search_execution_time": 6.36086320807226,
+    "content_extraction_time": 1.1322953749913722,
+    "answer_synthesis_time": 2.4064850830473006,
+    "answer_evaluation_time": 3.0102154999040067,
+    "errors": [
+      "Extraction error for https://www.metabolon.com/guide-to-metabolomics/: Network or HTTP error while fetching https://www.metabolon.com/guide-to-metabolomics/: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)"
+    ]
+  },
+  "extracted_contents": [
+    "Biomarker Discovery and Diagnostics This area of research plays a pivotal role in identifying and characterizing biomarkers \u2014 indicators that provide crucial insights into an organism\u2019s physiological state. The discovery of biomarkers through metabolomics offers a diagnostic window into various conditions for human health and disease research. By analyzing unique metabolic signatures associated with diseases like cancer , diabetes and cardiovascular disorders, researchers can unveil specific biomarkers that serve as early indicators. This information facilitates early diagnosis and opens avenues for monitoring disease progression and assessing treatment responses quickly."
+  ]
+}

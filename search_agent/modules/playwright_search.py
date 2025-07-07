@@ -38,7 +38,7 @@ async def search(query: str, config: Optional['Configuration'] = None) -> Search
     start_time = time.perf_counter()
     
     # Get configuration parameters
-    timeout_ms = 30000  # Default timeout
+    timeout_ms = 10000  # Reduced default timeout from 30s to 10s
     user_agent = None
     proxy = None
     

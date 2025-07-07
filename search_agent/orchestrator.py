@@ -66,10 +66,21 @@ async def run_orchestration(query: str, config: Optional['Configuration'] = None
             import inspect
             if inspect.iscoroutinefunction(search_function):
                 # Add async function directly with config
-                tasks.append(search_function(query, config))
+                # Check if the function accepts config parameter
+                import inspect
+                sig = inspect.signature(search_function)
+                if 'config' in sig.parameters:
+                    tasks.append(search_function(query, config))
+                else:
+                    tasks.append(search_function(query))
             else:
                 # Wrap synchronous function with asyncio.to_thread
-                tasks.append(asyncio.to_thread(search_function, query, config))
+                # Check if the function accepts config parameter
+                sig = inspect.signature(search_function)
+                if 'config' in sig.parameters:
+                    tasks.append(asyncio.to_thread(search_function, query, config))
+                else:
+                    tasks.append(asyncio.to_thread(search_function, query))
                 
         except (ImportError, AttributeError) as e:
             logger.warning(f"Could not load module '{module_name}': {e}")

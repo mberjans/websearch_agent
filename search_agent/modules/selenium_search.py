@@ -66,7 +66,7 @@ def search(query: str, config: Optional['Configuration'] = None) -> SearchModule
         time.sleep(2)
         
         # Wait for the page to load
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 5)  # Reduced from 10s to 5s
         
         # Try multiple selectors that might contain search results
         result_elements = []

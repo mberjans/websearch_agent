@@ -1,0 +1,43 @@
+{
+  "query": "What is clinical metabolomics?",
+  "synthesized_answer": {
+    "answer": "The provided text snippets do not contain sufficient information to define clinical metabolomics. Therefore, I cannot formulate a direct answer based on the given content.",
+    "source_urls": [
+      "https://www.creative-proteomics.com/resource/what-is-metabolomics.htm"
+    ],
+    "timestamp_utc": "2025-07-07 09:20:25.973417+00:00",
+    "execution_time_seconds": 2.128681250149384
+  },
+  "evaluation_results": {
+    "factual_consistency_score": 0.0,
+    "relevance_score": 0.0,
+    "completeness_score": 0.0,
+    "conciseness_score": 0.0,
+    "llm_feedback": "Error parsing LLM evaluation output: Expecting value: line 1 column 1 (char 0) spaCy model 'en_core_web_md' not found. Please install it with: python -m spacy download en_core_web_md",
+    "nlp_relevance_score": null
+  },
+  "source_urls": [
+    "https://www.creative-proteomics.com/resource/what-is-metabolomics.htm"
+  ],
+  "timestamp_utc": "2025-07-07 09:20:25.973471+00:00",
+  "execution_time_seconds": 9.579226375091821,
+  "metadata": {
+    "total_urls_found": 10,
+    "urls_selected": 2,
+    "extraction_success_count": 1,
+    "extraction_failure_count": 1,
+    "low_quality_content_count": 0,
+    "search_execution_time": 4.682605166919529,
+    "content_extraction_time": 0.34495499986223876,
+    "answer_synthesis_time": 2.128681250149384,
+    "answer_evaluation_time": 2.4218840419780463,
+    "errors": [
+      "Extraction error for https://www.metabolon.com/guide-to-metabolomics/: Network or HTTP error while fetching https://www.metabolon.com/guide-to-metabolomics/: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)",
+      "Low factual consistency score: 0.0",
+      "Low relevance score: 0.0"
+    ]
+  },
+  "extracted_contents": [
+    "Submit the form below to download the PDF! * Email * I agree to receive other communications from Creative Proteomics, which may contain technical or marketing information. You can unsubscribe from these communications at any time. Submit Online Inquiry Please submit a detailed description of your project. We will provide you with a customized project plan to meet your research requests. You can also send emails directly to for inquiries. * Email Phone * Service & Products of Interest Services Required and Project Description * Verification Code SUBMIT"
+  ]
+}

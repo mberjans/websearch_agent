@@ -250,7 +250,7 @@ def search(
         
         # Run the answer orchestration
         logger.info("Starting answer orchestration")
-        result = asyncio.run(orchestrate_answer_generation(config.query, config.search.max_urls))
+        result = asyncio.run(orchestrate_answer_generation(config.query, config.search.max_urls, config))
         
         # Save result to file
         import json

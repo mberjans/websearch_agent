@@ -1,0 +1,44 @@
+{
+  "query": "What is today's day?",
+  "synthesized_answer": {
+    "answer": "Today is Monday, July 7, 2025.",
+    "source_urls": [
+      "https://nationaltoday.com/today/",
+      "https://www.timeanddate.com/"
+    ],
+    "timestamp_utc": "2025-07-07 08:54:55.896110+00:00",
+    "execution_time_seconds": 1.2026949161663651
+  },
+  "evaluation_results": {
+    "factual_consistency_score": 1.0,
+    "relevance_score": 1.0,
+    "completeness_score": 0.8,
+    "conciseness_score": 1.0,
+    "llm_feedback": "The answer is factually accurate and directly addresses the query. However, it could include the year for clarity, as the source content indicates the date is July 7, 2025. spaCy model 'en_core_web_md' not found. Please install it with: python -m spacy download en_core_web_md",
+    "nlp_relevance_score": null
+  },
+  "source_urls": [
+    "https://nationaltoday.com/today/",
+    "https://www.timeanddate.com/"
+  ],
+  "timestamp_utc": "2025-07-07 08:54:55.896155+00:00",
+  "execution_time_seconds": 37.223043457837775,
+  "metadata": {
+    "total_urls_found": 10,
+    "urls_selected": 2,
+    "extraction_success_count": 2,
+    "extraction_failure_count": 0,
+    "low_quality_content_count": 0,
+    "search_execution_time": 32.72835245891474,
+    "content_extraction_time": 0.6372797500807792,
+    "answer_synthesis_time": 1.2026949161663651,
+    "answer_evaluation_time": 2.653053499991074,
+    "errors": [
+      "LLM returned very short answer"
+    ]
+  },
+  "extracted_contents": [
+    "You are here: Home What is Today? What is Today? Holidays Jul 07 2K Shares Food & Beverage National Strawberry Sundae Day Jul 07 5K Shares Food & Beverage World Chocolate Day Jul 07 Federal Caribbean Community Day Jul 07 129 Shares Federal George Town Heritage Day in Penang Jul 07 571 Shares Relationship Global Forgiveness Day Jul 07 Federal Heroes' Day of Zambia Jul 07 807 Shares Special Interest International Peace & Love Day Jul 07 Appreciation Mother's Day South Sudan Jul 07 319 Shares Arts & Entertainment National Day of Rock \u2018n\u2019 Roll Jul 07 Appreciation National Deck Day Jul 07 1K Shares Food & Beverage National Dive Bar Day Jul 07 Fun National Dora Day Jul 07 334 Shares Relationship National Father Daughter Take a Walk Day Jul 07 218 Shares Animal National Koi Day Jul 07 742 Shares Food & Beverage National Macaroni Day Jul 07 Federal Saba Saba Day Jul 07 Federal Solomon Islands Independence Day Jul 07 Special Interest Star Festival Jul 07 Cultural Tanabata Jul 07 738 Shares Relationship Tell the Truth Day Jul 07 Cultural Tynwald Day Film 6 Jul ChiTown Drive-In Presents \u2013 Ferris Bueller\u2019s Day Off Sunday 8:45 pm CDT ChiTown Movies 2343 S Throop St Chicago, IL 60608 Music 7 Jul Beyonc\u00e9: COWBOY CARTER TOUR Monday 7:00 pm EDT Northwest Stadium 1600 Ring Rd Landover, MD 20785 7 Jul Beyonce: COWBOY CARTER TOUR Monday 7:00 pm EDT Northwest Stadium 1600 FedEx Way Landover, MD 20785 7 Jul OMD Monday 7:00 pm EDT Citizens House of Blues Boston 15 Lansdowne St. Boston, MA 02215 6 Jul OMD \u2013 Orchestral Manoeuvres in the Dark Sunday 8:00 pm EDT The Paramount in concert with Northwell 370 New York Ave Huntington, NY 11743 6 Jul Teddy Swims \u2013 I\u2019ve Tried Everything But Therapy Tour Sunday 8:00 pm CDT Armory 500 South 6th St Minneapolis, MN 55415 Sports 7 Jul Atlanta Dream v Golden State Valkyries (90\u2019s Night) Monday 7:30 pm EDT Gateway Center Arena 2330 Convention Center Concourse College Park, GA 30337 7 Jul Milwaukee Brewers vs. Los Angeles Dodgers Monday 6:40 pm CDT American Family Field 1 Brewers Way Milwaukee, WI 53214 July 7 birthdays Cassidy Rapper Marc Chagall Painter Sky Brown Skateboarder Share Tweet Pin 2K Shares Share Tweet Pin 2K Shares",
+    "Current Time Monday Jul 7, 2025 Edmonton, Alberta, Canada Set home location 2:54 : 51 am World Clock World Clock Current local time around the world. Personal World Clock Set the current time of your favorite locations across time zones. Time Zones Time Zone Map World map of time zones, accounting for all DST changes in real time. Time Zone Converter Calculate the time difference between places and time zones. Meeting Planner Find the best time to have a meeting across time zones. Event Time Announcer Calculate and share global times for your event. Calendar Jul 2025 7 Mon Full year Month January February March April May June July August September October November December Australia Canada India Ireland New Zealand United Kingdom United States Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla Antigua and Barbuda Argentina Armenia Aruba Australia Austria Azerbaijan Bahamas Bahrain Bangladesh Barbados Belarus Belgium Belize Benin Bermuda Bhutan Bolivia Bosnia and Herzegovina Botswana Brazil British Virgin Islands Brunei Bulgaria Burkina Faso Burundi Cambodia Cameroon Canada Cape Verde Cayman Islands Central African Republic Chad Chile China Colombia Comoros Congo DR Cook Islands Costa Rica Croatia Cuba Cura\u00e7ao Cyprus Czechia Denmark Djibouti Dominica Dominican Republic Ecuador Egypt El Salvador Equatorial Guinea Eritrea Estonia Ethiopia Falkland Islands Faroe Islands Fiji Finland France French Guiana French Polynesia Gabon Gambia Georgia Germany Ghana Gibraltar Greece Greenland Gregorian calendar Grenada Guadeloupe Guam Guatemala Guernsey Guinea Guinea-Bissau Guyana Haiti Honduras Hong Kong Hungary Iceland India Indonesia Iran Iraq Ireland Isle of Man Israel Italy Ivory Coast Jamaica Japan Jersey Jordan Julian calendar Kazakhstan Kenya Kiribati Kosovo Kuwait Kyrgyzstan La R\u00e9union Laos Latvia Lebanon Lesotho Liberia Libya Liechtenstein Lithuania Luxembourg Macau Madagascar Malawi Malaysia Maldives Mali Malta Marshall Islands Martinique Mauritania Mauritius Mayotte Mexico Micronesia Moldova Monaco Mongolia Montenegro Montserrat Morocco Mozambique Myanmar Namibia Nauru Nepal New Caledonia New Zealand Nicaragua Niger Nigeria Norfolk Island North Korea North Macedonia Northern Mariana Islands Norway Oman Pakistan Palau Panama Papua New Guinea Paraguay Peru Philippines Poland Portugal Puerto Rico Qatar Republic of the Congo Romania Russia Rwanda Saint Barth\u00e9lemy Saint Helena Saint Kitts and Nevis Saint Lucia Saint Martin Saint Pierre and Miquelon Saint Vincent and the Grenadines Samoa San Marino S\u00e3o Tom\u00e9 and Pr\u00edncipe Saudi Arabia Senegal Serbia Seychelles Sierra Leone Singapore Sint Maarten Slovakia Slovenia Solomon Islands Somalia South Africa South Korea South Sudan Spain Sri Lanka Sudan Suriname Swaziland Sweden Switzerland Syria Taiwan Tajikistan Tanzania Thailand The Netherlands Timor-Leste Togo Tonga Trinidad and Tobago Tunisia Turkey Turkmenistan Turks and Caicos Islands Tuvalu U.S. Virgin Islands Uganda Ukraine United Arab Emirates United Kingdom United States Uruguay Uzbekistan Vanuatu Vatican City Venezuela Vietnam Wallis and Futuna Yemen Zambia Zimbabwe Printable PDF Calendar Print, share, or save calendars with our PDF templates. Add Your Own Events Create your own events and add them to our calendar. 56th Anniversary of Apollo 11 on the Moon\u2014Where Did It Land? Neil Armstrong and Buzz Aldrin touched down in Mare Tranquillitatis on July 20, 1969. NASA\u2019s Noah Petro tells us about the landing site. Published: Jul 1, 2025 Skywatching in July Published: Jun 19, 2025 Moon Guide for July 2025 Published: Jun 19, 2025 Calculators & Timers Date to Date Calculator Calculate how many days there are between two dates. Date Calculator Add or subtract days, months, or years to or from a specific date. Countdown to Any Date Create your own countdown. Online Timer with Alarm Create one or multiple timers and start them in any order. Online Stopwatch Time your activities. With start alerts, lap times, and alarm sound. Sun, Moon & Space Sunrise and Sunset Calculate local times for day length, dusk, dawn, and much more. Moon Phases Exact times for each Moon phase in your city. Moonrise and Moonset Calculate local times for moonrise, moonset, altitude, and much more. Eclipses Worldwide Local times for solar and lunar eclipses and what they look like. The Sky Tonight Find and track the Sun, Moon, planets, and stars. Weather 9 \u00b0C Weather report for any location Current Weather Weather forecast for the next hour, today, tomorrow, and 14 days ahead. 2-Week Weather Forecast Detailed weather forecast for the next 14 days. Hour-by-Hour Weather Forecast for every hour in the next 7 days."
+  ]
+}

@@ -124,12 +124,23 @@ async def orchestrate_answer_generation(query: str, num_links_to_parse: int = 3,
         metadata["total_urls_found"] = len(search_output.results)
         logger.info(f"Search orchestration completed. Found {len(search_output.results)} results.")
 
-        # 2. Select top N unique URLs from the search results
+        # 2. Select top N unique URLs from the search results with better prioritization
         selected_urls = []
         seen_urls = set()
         seen_domains = set()  # To ensure diversity of sources
         
-        for result in search_output.results:
+        # Sort results by relevance (title length, domain quality, etc.)
+        sorted_results = sorted(
+            search_output.results,
+            key=lambda r: (
+                len(r.title) if r.title else 0,  # Longer titles often more descriptive
+                -len(r.snippet) if r.snippet else 0,  # Shorter snippets often more focused
+                str(r.url).split('/')[2] if r.url else ""  # Extract domain from URL
+            ),
+            reverse=True
+        )
+        
+        for result in sorted_results:
             if not result.url:
                 continue
                 

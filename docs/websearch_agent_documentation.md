@@ -24,6 +24,7 @@ The Clinical Metabolomics Oracle Web Search Agent is a sophisticated system desi
 - Answer quality evaluation with multiple metrics
 - Comprehensive logging and error handling
 - Modular and extensible architecture
+- **Flexible provider selection:** You can run any subset of search modules (e.g., only Selenium) via CLI or configuration. The orchestrator will skip unavailable or misconfigured modules and continue with available ones.
 
 ## System Architecture
 
@@ -41,6 +42,8 @@ The system follows a modular architecture with several key components:
 2. **Playwright Search**: Uses Playwright to search DuckDuckGo
 3. **Brave API Search**: Uses the Brave Search API
 4. **Google CSE Search**: Uses Google Custom Search Engine
+
+**Provider selection:** You can specify which search provider(s) to use with the `--search-provider` CLI argument or in your configuration file. If a provider is missing required configuration (e.g., API keys), it will be skipped and errors will be logged.
 
 ### Data Flow
 1. User query is sent to the Answer Orchestrator
@@ -147,6 +150,8 @@ The system uses environment variables for configuration, which can be set in a `
 | `LLM_TEMPERATURE` | Temperature parameter for LLM | `0.1` |
 | `LLM_MAX_TOKENS` | Maximum tokens for LLM response | `1024` |
 
+**Note:** If a search provider is missing required configuration (such as an API key), the orchestrator will skip that provider and continue with the available modules. Errors will be logged but will not stop the answer generation process.
+
 ### Advanced Configuration
 For advanced configuration, you can modify the following files:
 - `search_agent/config.py`: Core configuration settings
@@ -164,6 +169,13 @@ python test_answer_generation.py
 ```
 
 You can modify the query in the script to test different questions.
+
+**To run with a specific search provider (e.g., Selenium only):**
+```bash
+python websearch_agent.py search "What is today's day?" --search-provider selenium --llm-provider openrouter --llm-model openrouter/cypher-alpha:free
+```
+
+You can also specify multiple providers as a comma-separated list (e.g., `--search-provider selenium,playwright`).
 
 ### Python API
 To use the system in your Python code:
@@ -253,6 +265,10 @@ Evaluates the quality of a synthesized answer.
 
 **Returns:**
 - Dictionary with quality metrics
+
+### Orchestrator Robustness
+- The orchestrator is robust to search modules with or without a `config` parameter. It will call each module appropriately based on its function signature.
+- If a search module fails (e.g., due to missing configuration or runtime error), the error is logged and the orchestrator continues with the remaining modules.
 
 ## Output Files
 
@@ -511,6 +527,9 @@ if __name__ == "__main__":
    # Synthesize an answer with specific content
    answer = await synthesize_answer(query, [content])
    ```
+
+### Error Handling Notes
+- If a search provider fails (e.g., due to missing API keys, timeouts, or other errors), the orchestrator logs the error and continues with the available results. This ensures that answer generation is robust and not blocked by individual module failures.
 
 ## Performance Metrics
 

@@ -111,22 +111,35 @@ JSON Evaluation:"""
                 llm_output = response.choices[0].message.content
                 
                 try:
+                    # Try to parse as pure JSON first
                     parsed_llm_output = json.loads(llm_output)
+                except json.JSONDecodeError:
+                    # If that fails, try to extract JSON from markdown code blocks
+                    import re
                     
-                    evaluation_results["factual_consistency_score"] = parsed_llm_output.get("factual_consistency_score", 0.0)
-                    evaluation_results["relevance_score"] = parsed_llm_output.get("relevance_score", 0.0)
-                    evaluation_results["completeness_score"] = parsed_llm_output.get("completeness_score", 0.0)
-                    evaluation_results["conciseness_score"] = parsed_llm_output.get("conciseness_score", 0.0)
-                    evaluation_results["llm_feedback"] = parsed_llm_output.get("llm_feedback")
-                    
-                    # Break out of the retry loop on success
-                    break
-                    
-                except json.JSONDecodeError as e:
-                    logger.error(f"Failed to parse LLM output as JSON: {e}. Output: {llm_output}")
-                    evaluation_results["llm_feedback"] = f"Error parsing LLM evaluation output: {e}"
-                    # Don't retry for JSON parsing errors as they're not transient
-                    break
+                    # Look for JSON wrapped in markdown code blocks
+                    json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', llm_output, re.DOTALL)
+                    if json_match and json_match.group(1):
+                        try:
+                            parsed_llm_output = json.loads(json_match.group(1))
+                        except json.JSONDecodeError as e:
+                            logger.error(f"Failed to parse extracted JSON from markdown: {e}. Extracted: {json_match.group(1)}")
+                            evaluation_results["llm_feedback"] = f"Error parsing LLM evaluation output: {e}. Output: {llm_output}"
+                            break
+                    else:
+                        logger.error(f"Failed to parse LLM output as JSON and no markdown JSON found. Output: {llm_output}")
+                        evaluation_results["llm_feedback"] = f"Error parsing LLM evaluation output: No valid JSON found. Output: {llm_output}"
+                        break
+                
+                # Extract the evaluation results
+                evaluation_results["factual_consistency_score"] = parsed_llm_output.get("factual_consistency_score", 0.0)
+                evaluation_results["relevance_score"] = parsed_llm_output.get("relevance_score", 0.0)
+                evaluation_results["completeness_score"] = parsed_llm_output.get("completeness_score", 0.0)
+                evaluation_results["conciseness_score"] = parsed_llm_output.get("conciseness_score", 0.0)
+                evaluation_results["llm_feedback"] = parsed_llm_output.get("llm_feedback")
+                
+                # Break out of the retry loop on success
+                break
                 
             except RateLimitError as e:
                 # Handle rate limit errors with exponential backoff
