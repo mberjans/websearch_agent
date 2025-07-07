@@ -63,7 +63,7 @@ This document provides a detailed checklist of tasks for implementing the CLI ar
 - [x] **CORE-006.3**: Implement fallback to environment variables when configuration is not provided
 - [x] **CORE-006.4**: Test existing code with new configuration system
 - [x] **CORE-006.5**: Update function signatures while maintaining compatibility
-- [ ] **CORE-006.6**: Add deprecation warnings for old usage patterns
+- [x] **CORE-006.6**: Add deprecation warnings for old usage patterns
 
 ### CORE-007: Add PyYAML dependency
 
